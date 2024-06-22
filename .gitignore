@@ -4,6 +4,9 @@ target/
 !**/src/main/**/target/
 !**/src/test/**/target/
 
+### Personalizado ###
+*.sql
+
 ### STS ###
 .apt_generated
 .classpath
