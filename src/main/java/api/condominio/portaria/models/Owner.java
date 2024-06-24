@@ -48,9 +48,15 @@ public class Owner implements Serializable {
 
     @Column(nullable = false, length = 7)
     @Convert(converter = RecordStatusConverter.class)
-    private RecordStatusEnum status;
+    private RecordStatusEnum status = RecordStatusEnum.ACTIVE;
 
     @NotNull
     @Column(name = "data_cadastro", nullable = false)
     private LocalDateTime createdAt = LocalDateTime.now();
+
+    public Owner(String name, String cpf, String phone) {
+        this.name = name;
+        this.cpf = cpf;
+        this.phone = phone;
+    }
 }
