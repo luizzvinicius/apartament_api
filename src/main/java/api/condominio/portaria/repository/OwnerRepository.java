@@ -10,11 +10,14 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
 import java.util.UUID;
 
 @Repository
 public interface OwnerRepository extends JpaRepository<Owner, UUID> {
     Page<Owner> findAllOwnerByStatusEquals(RecordStatusEnum status, Pageable p);
+
+    Optional<Owner> findOwnerByIdAndStatusEquals(UUID id, RecordStatusEnum s);
 
     @Modifying
     @Query(value = "UPDATE proprietario SET telefone = :phone WHERE id = :id", nativeQuery = true)

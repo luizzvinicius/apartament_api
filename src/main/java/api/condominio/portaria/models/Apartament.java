@@ -14,6 +14,7 @@ import lombok.Setter;
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.Objects;
 import java.util.Set;
 
 @Getter
@@ -37,6 +38,7 @@ public class Apartament implements Serializable {
     private Owner owner;
 
     @OneToMany(mappedBy = "apartament", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OrderBy("name")
     private Set<Resident> residents;
 
     @OneToMany(mappedBy = "apartament", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -44,9 +46,26 @@ public class Apartament implements Serializable {
 
     @Column(nullable = false, length = 7)
     @Convert(converter = RecordStatusConverter.class)
-    private RecordStatusEnum status;
+    private RecordStatusEnum status = RecordStatusEnum.ACTIVE;
 
     @NotNull
     @Column(name = "data_cadastro", nullable = false)
     private LocalDateTime createdAt = LocalDateTime.now();
+
+    public Apartament(String bloco, String numApto, Owner owner) {
+        this.numApto = new ApartamentNumber(bloco, numApto);
+        this.owner = owner;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Apartament that)) return false;
+        return Objects.equals(numApto, that.numApto);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(numApto);
+    }
 }
