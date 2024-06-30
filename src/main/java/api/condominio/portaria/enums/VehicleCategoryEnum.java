@@ -1,20 +1,23 @@
 package api.condominio.portaria.enums;
 
+import com.fasterxml.jackson.annotation.JsonValue;
+
 public enum VehicleCategoryEnum {
     CAR("carro"), MOTORCYCLE("moto");
 
-    private String value;
+    private final String category;
 
-    VehicleCategoryEnum(String category) {
-        this.value = category;
+    VehicleCategoryEnum(String value) {
+        this.category = value;
     }
 
+    @JsonValue // Salva vidas
     public String getValue() {
-        return value;
+        return category;
     }
 
     @Override
     public String toString() {
-        return value;
+        return category;
     }
 }
