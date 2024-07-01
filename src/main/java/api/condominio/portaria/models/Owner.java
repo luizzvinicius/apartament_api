@@ -14,6 +14,7 @@ import lombok.Setter;
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 
@@ -58,5 +59,17 @@ public class Owner implements Serializable {
         this.name = name;
         this.cpf = cpf;
         this.phone = phone;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Owner owner)) return false;
+        return Objects.equals(id, owner.id) && Objects.equals(cpf, owner.cpf);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, cpf);
     }
 }
