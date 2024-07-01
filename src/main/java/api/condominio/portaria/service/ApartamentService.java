@@ -32,7 +32,7 @@ public class ApartamentService {
     }
 
     public ResponseApartamentDTO findSpecificApartament(CreateApartamentDTO createApartamentDTO) {
-        return repository.findSpecificApartament(createApartamentDTO.bloco(), createApartamentDTO.numApto())
+        return repository.findByNumAptoBlocoAndNumAptoNumAptoAndStatusEquals(createApartamentDTO.bloco(), createApartamentDTO.numApto(), RecordStatusEnum.ACTIVE)
                 .map(apto ->
                     new ResponseApartamentDTO(
                             apto.getNumApto(),
