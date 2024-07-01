@@ -15,6 +15,7 @@ import lombok.Setter;
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.Objects;
 import java.util.UUID;
 
 @Getter
@@ -49,12 +50,30 @@ public class Resident implements Serializable {
     @Column(name = "telefone", nullable = false, length = 11)
     private String phone;
 
-    @NotBlank
+    @NotNull
     @Column(nullable = false, length = 7)
     @Convert(converter = RecordStatusConverter.class)
-    private RecordStatusEnum status;
+    private RecordStatusEnum status = RecordStatusEnum.ACTIVE;
 
     @NotNull
     @Column(name = "data_cadastro", nullable = false)
     private LocalDateTime createdAt = LocalDateTime.now();
+
+    public Resident(String name, String cpf, String phone) {
+        this.name = name;
+        this.cpf = cpf;
+        this.phone = phone;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Resident resident)) return false;
+        return Objects.equals(id, resident.id) && Objects.equals(cpf, resident.cpf);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, cpf);
+    }
 }

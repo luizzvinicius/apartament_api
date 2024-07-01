@@ -1,4 +1,8 @@
 package api.condominio.portaria.dtos;
 
-public record PhoneDTO(String phone) {
-}
+import java.util.UUID;
+
+public record PhoneDTO(
+        UUID id,
+        String phone
+) { }
