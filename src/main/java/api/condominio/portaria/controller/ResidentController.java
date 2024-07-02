@@ -25,7 +25,10 @@ public class ResidentController {
         return ResponseEntity.status(HttpStatus.CREATED).body(service.createResident(residentDTO));
     }
 
-    // moradores do bloco ?
+    @GetMapping("/bloco/{bloco}")
+    public ResponseEntity<Set<ResponseResidentDTO>> getBlocoResidents(@PathVariable String bloco) {
+        return ResponseEntity.status(HttpStatus.OK).body(service.getBlocoResidents(bloco));
+    }
 
     @GetMapping
     public ResponseEntity<Set<ResponseResidentDTO>> getResidentsByNumApto(@RequestParam("bloco") String bloco,
@@ -37,6 +40,4 @@ public class ResidentController {
     public ResponseEntity<ResponseResidentDTO> updatePhone(@RequestBody @Valid PhoneDTO phone) {
         return ResponseEntity.ok(service.updatePhone(phone));
     }
-
-    // deleção ver depois
 }

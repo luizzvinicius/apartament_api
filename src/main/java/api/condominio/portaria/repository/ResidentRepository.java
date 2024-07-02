@@ -5,10 +5,11 @@ import api.condominio.portaria.models.Resident;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.Set;
+import java.util.List;
 import java.util.UUID;
 
 @Repository
 public interface ResidentRepository extends JpaRepository<Resident, UUID> {
-    Set<Resident> findByApartamentNumAptoBlocoAndApartamentNumAptoNumAptoAndStatusEquals(String b, String numApto, RecordStatusEnum s);
+    List<Resident> findByApartamentNumAptoBlocoAndApartamentNumAptoNumAptoAndStatusEquals(String b, String numApto, RecordStatusEnum s);
+    List<Resident> findByApartamentNumAptoBlocoAndStatusEquals(String b, RecordStatusEnum s);
 }

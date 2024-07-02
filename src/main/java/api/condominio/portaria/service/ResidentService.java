@@ -36,6 +36,11 @@ public class ResidentService {
         return mapperResident.toDTO(savedResident);
     }
 
+    public Set<ResponseResidentDTO> getBlocoResidents(String bloco) {
+        return repository.findByApartamentNumAptoBlocoAndStatusEquals(bloco, RecordStatusEnum.ACTIVE)
+                .stream().map(mapperResident::toDTO).collect(Collectors.toSet());
+    }
+
     public Set<ResponseResidentDTO> getResidentsByNumApto(String bloco, String numApto) {
         return repository.findByApartamentNumAptoBlocoAndApartamentNumAptoNumAptoAndStatusEquals(bloco, numApto, RecordStatusEnum.ACTIVE)
                 .stream().map(mapperResident::toDTO).collect(Collectors.toSet());
