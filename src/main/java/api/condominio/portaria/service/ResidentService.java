@@ -33,9 +33,7 @@ public class ResidentService {
         resident.setApartament(apartament);
 
         var savedResident = repository.save(resident);
-        return new ResponseResidentDTO(
-                savedResident.getId(), savedResident.getApartament().getNumApto(),
-                savedResident.getName(), savedResident.getCpf(), savedResident.getPhone());
+        return mapperResident.toDTO(savedResident);
     }
 
     public Set<ResponseResidentDTO> getResidentsByNumApto(String bloco, String numApto) {
@@ -46,8 +44,7 @@ public class ResidentService {
     public ResponseResidentDTO updatePhone(PhoneDTO phone) {
         var resident = repository.findById(phone.id()).orElseThrow(RuntimeException::new);
         resident.setPhone(phone.phone());
-        return mapperResident.toDTO(
-                repository.save(resident)
-        );
+        var updatedResident = repository.save(resident);
+        return mapperResident.toDTO(updatedResident);
     }
 }
