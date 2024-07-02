@@ -2,10 +2,10 @@ package api.condominio.portaria.dtos.apartament;
 
 import api.condominio.portaria.models.Apartament;
 
-import java.util.Set;
+import java.util.List;
 
 public record ApartamentPageDTO(
-        Set<Apartament> apartaments,
+        List<Apartament> apartaments,
         int totalPages,
         long size
 ) { }

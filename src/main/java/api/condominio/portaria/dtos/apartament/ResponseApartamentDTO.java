@@ -4,12 +4,12 @@ import api.condominio.portaria.models.Resident;
 import api.condominio.portaria.models.Vehicle;
 import api.condominio.portaria.models.embeddable.ApartamentNumber;
 
-import java.util.Set;
+import java.util.List;
 import java.util.UUID;
 
 public record ResponseApartamentDTO (
         ApartamentNumber numApto,
         UUID ownerId,
-        Set<Resident> residents,
-        Set<Vehicle> vehicles
+        List<Resident> residents,
+        List<Vehicle> vehicles
 ) { }

@@ -9,7 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Set;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/resident")
@@ -26,13 +26,13 @@ public class ResidentController {
     }
 
     @GetMapping("/bloco/{bloco}")
-    public ResponseEntity<Set<ResponseResidentDTO>> getBlocoResidents(@PathVariable String bloco) {
+    public ResponseEntity<List<ResponseResidentDTO>> getBlocoResidents(@PathVariable String bloco) {
         return ResponseEntity.status(HttpStatus.OK).body(service.getBlocoResidents(bloco));
     }
 
     @GetMapping
-    public ResponseEntity<Set<ResponseResidentDTO>> getResidentsByNumApto(@RequestParam("bloco") String bloco,
-                                                                          @RequestParam("numApto") String numApto) {
+    public ResponseEntity<List<ResponseResidentDTO>> getResidentsByNumApto(@RequestParam("bloco") String bloco,
+                                                                           @RequestParam("numApto") String numApto) {
         return ResponseEntity.status(HttpStatus.OK).body(service.getResidentsByNumApto(bloco, numApto));
     }
 

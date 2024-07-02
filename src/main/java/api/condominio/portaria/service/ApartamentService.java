@@ -44,6 +44,6 @@ public class ApartamentService {
         if (page.isEmpty()) {
             throw new RuntimeException();
         }
-        return new ApartamentPageDTO(page.toSet(), page.getTotalPages(), page.getTotalElements());
+        return new ApartamentPageDTO(page.toList(), page.getTotalPages(), page.getTotalElements());
     }
 }

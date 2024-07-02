@@ -13,7 +13,7 @@ import lombok.Setter;
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.Objects;
-import java.util.Set;
+import java.util.List;
 
 @Getter
 @Setter
@@ -36,10 +36,10 @@ public class Apartament implements Serializable {
 
     @OneToMany(mappedBy = "apartament", cascade = CascadeType.ALL, orphanRemoval = true)
     @OrderBy("name")
-    private Set<Resident> residents;
+    private List<Resident> residents;
 
     @OneToMany(mappedBy = "apartament", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<Vehicle> vehicles;
+    private List<Vehicle> vehicles;
 
     @Column(nullable = false, length = 7)
     @Convert(converter = RecordStatusConverter.class)

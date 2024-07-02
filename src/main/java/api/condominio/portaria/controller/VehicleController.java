@@ -9,7 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Set;
+import java.util.List;
 
 @RestController()
 @RequestMapping("/api/v1/vehicle")
@@ -32,7 +32,7 @@ public class VehicleController {
     }
 
     @GetMapping("/bloco/{bloco}")
-    public ResponseEntity<Set<ResponseVehicleDTO>> getVehiclesByBloco(@PathVariable String bloco) {
+    public ResponseEntity<List<ResponseVehicleDTO>> getVehiclesByBloco(@PathVariable String bloco) {
         return ResponseEntity.ok(service.getVehicleByBloco(bloco));
     }
 

@@ -15,7 +15,7 @@ import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Objects;
-import java.util.Set;
+import java.util.List;
 import java.util.UUID;
 
 @Getter
@@ -33,7 +33,7 @@ public class Owner implements Serializable {
     private UUID id;
 
     @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<Apartament> apartaments;
+    private List<Apartament> apartaments;
 
     @NotBlank
     @Column(name = "nome", nullable = false)

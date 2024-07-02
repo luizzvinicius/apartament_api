@@ -13,8 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 
 import java.util.Locale;
-import java.util.Set;
-import java.util.stream.Collectors;
+import java.util.List;
 
 @Service
 @Validated
@@ -57,9 +56,9 @@ public class VehicleService {
                 .orElseThrow(RuntimeException::new);
     }
 
-    public Set<ResponseVehicleDTO> getVehicleByBloco(String bloco) {
+    public List<ResponseVehicleDTO> getVehicleByBloco(String bloco) {
         return repository.findAllByApartamentNumAptoBlocoEquals(bloco).stream()
-                .map(vehicleMapper::toDTO).collect(Collectors.toSet());
+                .map(vehicleMapper::toDTO).toList();
     }
 
     @Transactional

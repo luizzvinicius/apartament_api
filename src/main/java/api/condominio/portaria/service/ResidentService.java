@@ -11,8 +11,7 @@ import api.condominio.portaria.repository.ApartamentRepository;
 import api.condominio.portaria.repository.ResidentRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.Set;
-import java.util.stream.Collectors;
+import java.util.List;
 
 @Service
 public class ResidentService {
@@ -36,14 +35,14 @@ public class ResidentService {
         return mapperResident.toDTO(savedResident);
     }
 
-    public Set<ResponseResidentDTO> getBlocoResidents(String bloco) {
+    public List<ResponseResidentDTO> getBlocoResidents(String bloco) {
         return repository.findByApartamentNumAptoBlocoAndStatusEquals(bloco, RecordStatusEnum.ACTIVE)
-                .stream().map(mapperResident::toDTO).collect(Collectors.toSet());
+                .stream().map(mapperResident::toDTO).toList();
     }
 
-    public Set<ResponseResidentDTO> getResidentsByNumApto(String bloco, String numApto) {
+    public List<ResponseResidentDTO> getResidentsByNumApto(String bloco, String numApto) {
         return repository.findByApartamentNumAptoBlocoAndApartamentNumAptoNumAptoAndStatusEquals(bloco, numApto, RecordStatusEnum.ACTIVE)
-                .stream().map(mapperResident::toDTO).collect(Collectors.toSet());
+                .stream().map(mapperResident::toDTO).toList();
     }
 
     public ResponseResidentDTO updatePhone(PhoneDTO phone) {
