@@ -2,6 +2,7 @@ package api.condominio.portaria.service;
 
 import api.condominio.portaria.dtos.apartament.ApartamentPageDTO;
 import api.condominio.portaria.dtos.apartament.CreateApartamentDTO;
+import api.condominio.portaria.dtos.apartament.MapperApartament;
 import api.condominio.portaria.dtos.apartament.ResponseApartamentDTO;
 import api.condominio.portaria.enums.RecordStatusEnum;
 import api.condominio.portaria.models.Apartament;
@@ -15,10 +16,12 @@ import org.springframework.stereotype.Service;
 public class ApartamentService {
     private final ApartamentRepository repository;
     private final OwnerRepository ownerRepository;
+    private final MapperApartament mapperApartament;
 
-    public ApartamentService(ApartamentRepository repository, OwnerRepository ownerRepository) {
+    public ApartamentService(ApartamentRepository repository, OwnerRepository ownerRepository, MapperApartament mapperApartament) {
         this.repository = repository;
         this.ownerRepository = ownerRepository;
+        this.mapperApartament = mapperApartament;
     }
 
     public ResponseApartamentDTO createApartament(CreateApartamentDTO createApartamentDTO) {
@@ -26,22 +29,14 @@ public class ApartamentService {
                 .orElseThrow(RuntimeException::new);
 
         var apartament = new Apartament(createApartamentDTO.bloco(), createApartamentDTO.numApto(), owner);
-        repository.save(apartament);
+        var savedApartament = repository.save(apartament);
 
-        return new ResponseApartamentDTO(apartament.getNumApto(), apartament.getOwner().getId(), apartament.getResidents(), apartament.getVehicles(), apartament.getCreatedAt());
+        return mapperApartament.toDTO(savedApartament);
     }
 
     public ResponseApartamentDTO findSpecificApartament(CreateApartamentDTO createApartamentDTO) {
         return repository.findByNumAptoBlocoAndNumAptoNumAptoAndStatusEquals(createApartamentDTO.bloco(), createApartamentDTO.numApto(), RecordStatusEnum.ACTIVE)
-                .map(apto ->
-                    new ResponseApartamentDTO(
-                            apto.getNumApto(),
-                            apto.getOwner().getId(),
-                            apto.getResidents(),
-                            apto.getVehicles(),
-                            apto.getCreatedAt()
-                    )
-                ).orElseThrow(RuntimeException::new);
+                .map(mapperApartament::toDTO).orElseThrow(RuntimeException::new);
     }
 
     public ApartamentPageDTO findApartamentBloco(String bloco, int p, int s) { // validar bloco

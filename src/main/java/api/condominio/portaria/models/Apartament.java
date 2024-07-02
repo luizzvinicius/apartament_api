@@ -5,7 +5,6 @@ import api.condominio.portaria.enums.RecordStatusConverter;
 import api.condominio.portaria.models.embeddable.ApartamentNumber;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,7 +12,6 @@ import lombok.Setter;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.Set;
 
@@ -31,7 +29,6 @@ public class Apartament implements Serializable {
     @Column(nullable = false)
     private ApartamentNumber numApto;
 
-    @NotNull
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_proprietario", referencedColumnName = "id")
@@ -47,10 +44,6 @@ public class Apartament implements Serializable {
     @Column(nullable = false, length = 7)
     @Convert(converter = RecordStatusConverter.class)
     private RecordStatusEnum status = RecordStatusEnum.ACTIVE;
-
-    @NotNull
-    @Column(name = "data_cadastro", nullable = false)
-    private LocalDateTime createdAt = LocalDateTime.now();
 
     public Apartament(String bloco, String numApto, Owner owner) {
         this.numApto = new ApartamentNumber(bloco, numApto);
