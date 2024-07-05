@@ -65,7 +65,7 @@ public class ApartamentService {
 
         var registeredApartaments = repository.countByOwnerIdAndStatusEquals(ownerId, RecordStatusEnum.ACTIVE);
         if (registeredApartaments == 1) {
-            ownerRepository.updateOwnerStatus(ownerId, RecordStatusEnum.INACTIVE.getValue());
+            ownerRepository.updateOwnerStatus(ownerId, RecordStatusEnum.INACTIVE.getValue(), RecordStatusEnum.ACTIVE.getValue());
         }
 
         var vehicles = apartament.getVehicles();

@@ -54,7 +54,7 @@ public class OwnerService {
 
     @Transactional
     public void deleteOwner(UUID id) throws RuntimeException {
-        var updated = repository.updateOwnerStatus(id, RecordStatusEnum.INACTIVE.getValue());
+        var updated = repository.updateOwnerStatus(id, RecordStatusEnum.INACTIVE.getValue(), RecordStatusEnum.ACTIVE.getValue());
         if (updated == 0) {
             throw new RuntimeException("Proprietario não encontrado");
         }
