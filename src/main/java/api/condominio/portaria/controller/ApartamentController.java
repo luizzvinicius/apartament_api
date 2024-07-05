@@ -12,6 +12,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.UUID;
+
 @RestController
 @RequestMapping("/api/v1/apartament")
 public class ApartamentController {
@@ -39,5 +41,10 @@ public class ApartamentController {
         return ResponseEntity.ok(service.findApartamentBloco(bloco, p, s));
     }
 
-    // deleção (último a fazer porque deve analisar possibilidades)
+    @DeleteMapping("/{bloco}/{numApto}")
+    public ResponseEntity<Void> deleteAllRelations(@PathVariable String bloco,
+                                                   @PathVariable String numApto) {
+        service.deleteApartament(bloco, numApto);
+        return ResponseEntity.noContent().build();
+    }
 }
