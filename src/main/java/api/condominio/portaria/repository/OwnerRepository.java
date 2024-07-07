@@ -21,9 +21,9 @@ public interface OwnerRepository extends JpaRepository<Owner, UUID> {
 
     @Modifying
     @Query(value = "UPDATE proprietario SET telefone = :phone WHERE id = :id", nativeQuery = true)
-    int updateOwnerPhone(@Param("id") UUID id, @Param("phone") String newPhone);
+    Integer updateOwnerPhone(@Param("id") UUID id, @Param("phone") String newPhone);
 
     @Modifying
     @Query(value = "UPDATE proprietario SET status = :setStatus WHERE id = :id AND status = :wStatus", nativeQuery = true)
-    int updateOwnerStatus(@Param("id") UUID id, @Param("setStatus") String setStatus, @Param("wStatus") String wStatus);
+    Integer updateOwnerStatus(@Param("id") UUID id, @Param("setStatus") String setStatus, @Param("wStatus") String wStatus);
 }

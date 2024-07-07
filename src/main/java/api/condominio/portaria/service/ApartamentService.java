@@ -6,7 +6,6 @@ import api.condominio.portaria.dtos.apartament.MapperApartament;
 import api.condominio.portaria.dtos.apartament.ResponseApartamentDTO;
 import api.condominio.portaria.enums.RecordStatusEnum;
 import api.condominio.portaria.models.Apartament;
-import api.condominio.portaria.models.Vehicle;
 import api.condominio.portaria.repository.ApartamentRepository;
 import api.condominio.portaria.repository.OwnerRepository;
 import api.condominio.portaria.repository.ResidentRepository;
@@ -15,8 +14,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Iterator;
 
 @Service
 public class ApartamentService {
