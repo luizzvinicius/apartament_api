@@ -22,4 +22,8 @@ public interface ApartamentRepository extends JpaRepository<Apartament, Apartame
     @Modifying
     @Query(value = "UPDATE apartamento SET status = ?3 WHERE bloco = ?1 AND num_apto = ?2", nativeQuery = true)
     Integer updateStatus(String bloco, String numApto, String status);
+
+    @Modifying
+    @Query(value = "UPDATE apartamento SET id_proprietario = ?, status = ? WHERE bloco = ? AND num_apto = ? AND status = ?", nativeQuery = true)
+    Integer updateIdProprietario(UUID id, String setStatus, String bloco, String numApto, String whereStatus);
 }

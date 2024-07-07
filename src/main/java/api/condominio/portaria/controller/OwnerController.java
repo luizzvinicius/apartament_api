@@ -49,10 +49,4 @@ public class OwnerController {
         var owner = service.updateOwnerPhone(id, phone);
         return ResponseEntity.ok(owner);
     }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteOwner(@PathVariable UUID id) {
-        service.deleteOwner(id);
-        return ResponseEntity.noContent().build();
-    }
 }

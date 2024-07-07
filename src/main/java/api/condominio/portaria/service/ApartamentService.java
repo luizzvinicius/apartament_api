@@ -32,12 +32,9 @@ public class ApartamentService {
     }
 
     public ResponseApartamentDTO createApartament(CreateApartamentDTO createApartamentDTO) {
-        var owner = ownerRepository.findOwnerByIdAndStatusEquals(createApartamentDTO.idProprietario(), RecordStatusEnum.ACTIVE)
-                .orElseThrow(RuntimeException::new);
-
-        var apartament = new Apartament(createApartamentDTO.bloco(), createApartamentDTO.numApto(), owner);
-        var savedApartament = repository.save(apartament);
-
+        var savedApartament = repository.save(
+                new Apartament(createApartamentDTO.bloco(), createApartamentDTO.numApto())
+        );
         return mapperApartament.toDTO(savedApartament);
     }
 
@@ -46,7 +43,7 @@ public class ApartamentService {
                 .map(mapperApartament::toDTO).orElseThrow(RuntimeException::new);
     }
 
-    public ApartamentPageDTO findApartamentBloco(String bloco, int p, int s) { // validar bloco
+    public ApartamentPageDTO findApartamentBloco(String bloco, int p, int s) {
         Page<Apartament> page = repository.findAllApartamentBynumAptoBlocoEqualsAndStatusEquals(PageRequest.of(p, s), bloco, RecordStatusEnum.ACTIVE);
         if (page.isEmpty()) {
             throw new RuntimeException();

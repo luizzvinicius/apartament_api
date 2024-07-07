@@ -43,11 +43,10 @@ public class Apartament implements Serializable {
 
     @Column(nullable = false, length = 7)
     @Convert(converter = RecordStatusConverter.class)
-    private RecordStatusEnum status = RecordStatusEnum.ACTIVE;
+    private RecordStatusEnum status = RecordStatusEnum.INACTIVE;
 
-    public Apartament(String bloco, String numApto, Owner owner) {
+    public Apartament(String bloco, String numApto) {
         this.numApto = new ApartamentNumber(bloco, numApto);
-        this.owner = owner;
     }
 
     @Override
