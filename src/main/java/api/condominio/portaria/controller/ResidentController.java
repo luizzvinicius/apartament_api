@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/v1/resident")
@@ -39,5 +40,11 @@ public class ResidentController {
     @PutMapping
     public ResponseEntity<ResponseResidentDTO> updatePhone(@RequestBody @Valid PhoneDTO phone) {
         return ResponseEntity.ok(service.updatePhone(phone));
+    }
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteResident(@PathVariable UUID id) {
+        service.deleteResident(id);
     }
 }

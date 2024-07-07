@@ -13,6 +13,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Locale;
+import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class ResidentService {
@@ -30,10 +33,17 @@ public class ResidentService {
     public ResponseResidentDTO createResident(CreateResidentDTO residentDTO) {
         var apartament = apartamentRepository.findById(new ApartamentNumber(residentDTO.bloco(), residentDTO.numApto()))
                 .orElseThrow(RuntimeException::new);
-        var resident = new Resident(apartament, residentDTO.name(), residentDTO.cpf(), residentDTO.phone());
 
-        var savedResident = repository.save(resident);
-        return mapperResident.toDTO(savedResident);
+        Resident resident;
+        Optional<Resident> optResident = repository.findByCpfEquals(residentDTO.cpf());
+        if (optResident.isEmpty()) {
+            resident = repository.save(new Resident(apartament, residentDTO.name().toLowerCase(Locale.ROOT), residentDTO.cpf(), residentDTO.phone()));
+        } else {
+            resident = optResident.get();
+            repository.updateResidentStatus(resident.getId(), RecordStatusEnum.ACTIVE.getValue());
+        }
+
+        return mapperResident.toDTO(resident);
     }
 
     public List<ResponseResidentDTO> getBlocoResidents(String bloco) {
@@ -52,5 +62,13 @@ public class ResidentService {
         resident.setPhone(phone.phone());
         var updatedResident = repository.save(resident);
         return mapperResident.toDTO(updatedResident);
+    }
+
+    @Transactional
+    public void deleteResident(UUID id) {
+        var update = repository.updateResidentStatus(id, RecordStatusEnum.INACTIVE.getValue());
+        if (update == 0) {
+            throw new RuntimeException("Morador não encontrado");
+        }
     }
 }

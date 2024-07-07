@@ -17,6 +17,8 @@ import java.util.UUID;
 public interface OwnerRepository extends JpaRepository<Owner, UUID> {
     Page<Owner> findAllOwnerByStatusEquals(RecordStatusEnum status, Pageable p);
 
+    Optional<Owner> findByCpfAndStatusEquals(String cpf, RecordStatusEnum s);
+
     Optional<Owner> findOwnerByIdAndStatusEquals(UUID id, RecordStatusEnum s);
 
     @Modifying

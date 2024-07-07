@@ -14,6 +14,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -30,7 +31,16 @@ public class OwnerService {
 
     @Transactional
     public ResponseOwnerDTO createOwner(CreateOwnerDTO createOwnerDTO) {
-        var owner = repository.save(mapperOwnerDTO.toEntity(createOwnerDTO));
+        Owner owner;
+        Optional<Owner> optOwner = repository.findByCpfAndStatusEquals(createOwnerDTO.cpf(), RecordStatusEnum.INACTIVE);
+
+        if (optOwner.isEmpty()) {
+            owner = repository.save(mapperOwnerDTO.toEntity(createOwnerDTO));
+        } else {
+            owner = optOwner.get();
+            repository.updateOwnerStatus(optOwner.get().getId(), RecordStatusEnum.ACTIVE.getValue(), RecordStatusEnum.INACTIVE.getValue());
+        }
+
         var update = apartamentRepository.updateIdProprietario(
                 owner.getId(), RecordStatusEnum.ACTIVE.getValue(), createOwnerDTO.bloco(), createOwnerDTO.numApto(), RecordStatusEnum.INACTIVE.getValue()
         );
