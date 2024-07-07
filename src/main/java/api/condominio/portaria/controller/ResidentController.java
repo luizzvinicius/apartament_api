@@ -36,7 +36,7 @@ public class ResidentController {
         return ResponseEntity.status(HttpStatus.OK).body(service.getResidentsByNumApto(bloco, numApto));
     }
 
-    @PostMapping("/phone")
+    @PutMapping
     public ResponseEntity<ResponseResidentDTO> updatePhone(@RequestBody @Valid PhoneDTO phone) {
         return ResponseEntity.ok(service.updatePhone(phone));
     }

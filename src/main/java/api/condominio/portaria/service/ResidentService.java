@@ -10,6 +10,7 @@ import api.condominio.portaria.models.embeddable.ApartamentNumber;
 import api.condominio.portaria.repository.ApartamentRepository;
 import api.condominio.portaria.repository.ResidentRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -25,6 +26,7 @@ public class ResidentService {
         this.mapperResident = mapperResident;
     }
 
+    @Transactional
     public ResponseResidentDTO createResident(CreateResidentDTO residentDTO) {
         var apartament = apartamentRepository.findById(new ApartamentNumber(residentDTO.bloco(), residentDTO.numApto()))
                 .orElseThrow(RuntimeException::new);
@@ -44,6 +46,7 @@ public class ResidentService {
                 .stream().map(mapperResident::toDTO).toList();
     }
 
+    @Transactional
     public ResponseResidentDTO updatePhone(PhoneDTO phone) {
         var resident = repository.findById(phone.id()).orElseThrow(RuntimeException::new);
         resident.setPhone(phone.phone());

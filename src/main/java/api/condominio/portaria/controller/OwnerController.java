@@ -44,9 +44,9 @@ public class OwnerController {
         return ResponseEntity.ok(service.getOwners(p, s));
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<ResponseOwnerDTO> updateOwnersPhone(@PathVariable UUID id, @RequestBody PhoneDTO phone) {
-        var owner = service.updateOwnerPhone(id, phone);
+    @PutMapping
+    public ResponseEntity<ResponseOwnerDTO> updateOwnersPhone(@RequestBody PhoneDTO phone) {
+        var owner = service.updateOwnerPhone(phone);
         return ResponseEntity.ok(owner);
     }
 }

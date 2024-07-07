@@ -56,8 +56,8 @@ public class OwnerService {
     }
 
     @Transactional
-    public ResponseOwnerDTO updateOwnerPhone(UUID id, PhoneDTO dto) {
-        return repository.findById(id).map(owner -> {
+    public ResponseOwnerDTO updateOwnerPhone(PhoneDTO dto) {
+        return repository.findById(dto.id()).map(owner -> {
             owner.setPhone(dto.phone());
             return mapperOwnerDTO.toDTO(repository.save(owner));
         }).orElseThrow(RuntimeException::new);
