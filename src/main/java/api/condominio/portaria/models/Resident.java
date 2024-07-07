@@ -59,7 +59,8 @@ public class Resident implements Serializable {
     @Column(name = "data_cadastro", nullable = false)
     private LocalDateTime createdAt = LocalDateTime.now();
 
-    public Resident(String name, String cpf, String phone) {
+    public Resident(Apartament apt, String name, String cpf, String phone) {
+        this.apartament = apt;
         this.name = name;
         this.cpf = cpf;
         this.phone = phone;

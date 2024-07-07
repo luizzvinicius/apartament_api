@@ -28,8 +28,7 @@ public class ResidentService {
     public ResponseResidentDTO createResident(CreateResidentDTO residentDTO) {
         var apartament = apartamentRepository.findById(new ApartamentNumber(residentDTO.bloco(), residentDTO.numApto()))
                 .orElseThrow(RuntimeException::new);
-        var resident = new Resident(residentDTO.name(), residentDTO.cpf(), residentDTO.phone());
-        resident.setApartament(apartament);
+        var resident = new Resident(apartament, residentDTO.name(), residentDTO.cpf(), residentDTO.phone());
 
         var savedResident = repository.save(resident);
         return mapperResident.toDTO(savedResident);
