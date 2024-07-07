@@ -1,14 +1,13 @@
 package api.condominio.portaria.controller;
 
 import api.condominio.portaria.dtos.apartament.ApartamentPageDTO;
-import api.condominio.portaria.dtos.apartament.CreateApartamentDTO;
+import api.condominio.portaria.dtos.apartament.ApartamentNumberDTO;
 import api.condominio.portaria.dtos.apartament.ResponseApartamentDTO;
 import api.condominio.portaria.service.ApartamentService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.PositiveOrZero;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,14 +20,9 @@ public class ApartamentController {
         this.service = service;
     }
 
-    @PostMapping
-    public ResponseEntity<ResponseApartamentDTO> createApartament(@RequestBody @Valid CreateApartamentDTO createApartamentDTO) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(service.createApartament(createApartamentDTO));
-    }
-
     @GetMapping
-    public ResponseEntity<ResponseApartamentDTO> findSpecificApartament(@RequestBody @Valid CreateApartamentDTO createApartamentDTO) {
-        return ResponseEntity.ok(service.findSpecificApartament(createApartamentDTO));
+    public ResponseEntity<ResponseApartamentDTO> findSpecificApartament(@RequestBody @Valid ApartamentNumberDTO apartamentNumberDTO) {
+        return ResponseEntity.ok(service.findSpecificApartament(apartamentNumberDTO));
     }
 
     @GetMapping("/{bloco}")

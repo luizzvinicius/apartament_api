@@ -1,15 +1,9 @@
 package api.condominio.portaria.service;
 
-import api.condominio.portaria.dtos.apartament.ApartamentPageDTO;
-import api.condominio.portaria.dtos.apartament.CreateApartamentDTO;
-import api.condominio.portaria.dtos.apartament.MapperApartament;
-import api.condominio.portaria.dtos.apartament.ResponseApartamentDTO;
+import api.condominio.portaria.repository.*;
+import api.condominio.portaria.dtos.apartament.*;
 import api.condominio.portaria.enums.RecordStatusEnum;
 import api.condominio.portaria.models.Apartament;
-import api.condominio.portaria.repository.ApartamentRepository;
-import api.condominio.portaria.repository.OwnerRepository;
-import api.condominio.portaria.repository.ResidentRepository;
-import api.condominio.portaria.repository.VehicleRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -31,15 +25,8 @@ public class ApartamentService {
         this.vehicleRepository = vehicleRepository;
     }
 
-    public ResponseApartamentDTO createApartament(CreateApartamentDTO createApartamentDTO) {
-        var savedApartament = repository.save(
-                new Apartament(createApartamentDTO.bloco(), createApartamentDTO.numApto())
-        );
-        return mapperApartament.toDTO(savedApartament);
-    }
-
-    public ResponseApartamentDTO findSpecificApartament(CreateApartamentDTO createApartamentDTO) {
-        return repository.findByNumAptoBlocoAndNumAptoNumAptoAndStatusEquals(createApartamentDTO.bloco(), createApartamentDTO.numApto(), RecordStatusEnum.ACTIVE)
+    public ResponseApartamentDTO findSpecificApartament(ApartamentNumberDTO apartamentNumberDTO) {
+        return repository.findByNumAptoBlocoAndNumAptoNumAptoAndStatusEquals(apartamentNumberDTO.bloco(), apartamentNumberDTO.numApto(), RecordStatusEnum.ACTIVE)
                 .map(mapperApartament::toDTO).orElseThrow(RuntimeException::new);
     }
 
