@@ -2,6 +2,7 @@ package api.condominio.portaria.controller;
 
 import api.condominio.portaria.dtos.vehicle.CreateVehicleDTO;
 import api.condominio.portaria.dtos.vehicle.ResponseVehicleDTO;
+import api.condominio.portaria.dtos.vehicle.UpdateNoteDTO;
 import api.condominio.portaria.service.VehicleService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -36,9 +37,9 @@ public class VehicleController {
         return ResponseEntity.ok(service.getVehicleByBloco(bloco));
     }
 
-    @PostMapping("/note")
-    public ResponseEntity<ResponseVehicleDTO> updateVehicleNote(@RequestBody @Valid CreateVehicleDTO createValues) {
-        return ResponseEntity.ok(service.updateVehicleNote(createValues));
+    @PutMapping("/note")
+    public ResponseEntity<ResponseVehicleDTO> updateVehicleNote(@RequestBody @Valid UpdateNoteDTO updateNoteDTO) {
+        return ResponseEntity.ok(service.updateVehicleNote(updateNoteDTO));
     }
 
     @DeleteMapping("/{placa}")

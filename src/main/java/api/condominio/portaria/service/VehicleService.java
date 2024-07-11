@@ -1,8 +1,6 @@
 package api.condominio.portaria.service;
 
-import api.condominio.portaria.dtos.vehicle.CreateVehicleDTO;
-import api.condominio.portaria.dtos.vehicle.ResponseVehicleDTO;
-import api.condominio.portaria.dtos.vehicle.VehicleMapper;
+import api.condominio.portaria.dtos.vehicle.*;
 import api.condominio.portaria.enums.RecordStatusEnum;
 import api.condominio.portaria.enums.VehicleCategoryConverter;
 import api.condominio.portaria.models.Vehicle;
@@ -20,12 +18,12 @@ import java.util.List;
 public class VehicleService {
     private final VehicleRepository repository;
     private final ApartamentRepository apartamentRepository;
-    private final VehicleMapper vehicleMapper;
+    private final MapperVehicle mapperVehicle;
 
-    public VehicleService(VehicleRepository repository, ApartamentRepository apartamentRepository, VehicleMapper vehicleMapper) {
+    public VehicleService(VehicleRepository repository, ApartamentRepository apartamentRepository, MapperVehicle mapperVehicle) {
         this.repository = repository;
         this.apartamentRepository = apartamentRepository;
-        this.vehicleMapper = vehicleMapper;
+        this.mapperVehicle = mapperVehicle;
     }
 
     @Transactional
@@ -52,20 +50,20 @@ public class VehicleService {
 
     public ResponseVehicleDTO getVehicleByPlaca(String placa) {
         return repository.findById(placa.toLowerCase(Locale.ROOT))
-                .map(vehicleMapper::toDTO)
+                .map(mapperVehicle::toDTO)
                 .orElseThrow(RuntimeException::new);
     }
 
     public List<ResponseVehicleDTO> getVehicleByBloco(String bloco) {
         return repository.findAllByApartamentNumAptoBlocoEquals(bloco).stream()
-                .map(vehicleMapper::toDTO).toList();
+                .map(mapperVehicle::toDTO).toList();
     }
 
     @Transactional
-    public ResponseVehicleDTO updateVehicleNote(CreateVehicleDTO dto) {
+    public ResponseVehicleDTO updateVehicleNote(UpdateNoteDTO dto) {
         var vehicle = repository.findById(dto.placa()).orElseThrow(RuntimeException::new);
-        vehicle.setNote(dto.observation());
-        return vehicleMapper.toDTO(repository.save(vehicle));
+        vehicle.setNote(dto.note());
+        return mapperVehicle.toDTO(repository.save(vehicle));
     }
 
     @Transactional

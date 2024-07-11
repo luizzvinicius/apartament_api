@@ -2,11 +2,11 @@ package api.condominio.portaria.models;
 
 import api.condominio.portaria.enums.VehicleCategoryConverter;
 import api.condominio.portaria.enums.VehicleCategoryEnum;
+import api.condominio.portaria.validations.placa.PlacaValidation;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -29,8 +29,7 @@ public class Vehicle implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
-    @Size(min = 7)
-    @Pattern(regexp = "^[A-Za-z]{3}\\d{1}[A-Za-z0-9]{1}\\d{2}$", message = "Placa no formato inválido")
+    @PlacaValidation
     @Column(length = 7)
     private String placa;
 
