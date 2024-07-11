@@ -28,9 +28,7 @@ public class OwnerController {
 
     @PostMapping
     public ResponseEntity<ResponseOwnerDTO> createOwner(@RequestBody @Valid CreateOwnerDTO createOwnerDTO) {
-        return ResponseEntity
-                .status(HttpStatus.CREATED)
-                .body(service.createOwner(createOwnerDTO));
+        return ResponseEntity.status(HttpStatus.CREATED).body(service.createOwner(createOwnerDTO));
     }
 
     @GetMapping("/{id}")
