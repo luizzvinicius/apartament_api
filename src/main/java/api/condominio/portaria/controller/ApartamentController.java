@@ -33,10 +33,9 @@ public class ApartamentController {
         return ResponseEntity.ok(service.findApartamentBloco(bloco, p, s));
     }
 
-    @DeleteMapping("/{bloco}/{numApto}")
-    public ResponseEntity<Void> deleteAllRelations(@PathVariable String bloco,
-                                                   @PathVariable String numApto) {
-        service.deleteApartament(bloco, numApto);
+    @DeleteMapping
+    public ResponseEntity<Void> deleteAllRelations(@RequestBody @Valid ApartamentNumberDTO apartamentNumberDTO) {
+        service.deleteApartament(apartamentNumberDTO);
         return ResponseEntity.noContent().build();
     }
 }
