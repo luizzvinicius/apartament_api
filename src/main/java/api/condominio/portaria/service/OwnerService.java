@@ -1,10 +1,7 @@
 package api.condominio.portaria.service;
 
+import api.condominio.portaria.dtos.owner.*;
 import api.condominio.portaria.dtos.PhoneDTO;
-import api.condominio.portaria.dtos.owner.CreateOwnerDTO;
-import api.condominio.portaria.dtos.owner.MapperOwner;
-import api.condominio.portaria.dtos.owner.OwnerPageDTO;
-import api.condominio.portaria.dtos.owner.ResponseOwnerDTO;
 import api.condominio.portaria.enums.RecordStatusEnum;
 import api.condominio.portaria.models.Owner;
 import api.condominio.portaria.repository.ApartamentRepository;
