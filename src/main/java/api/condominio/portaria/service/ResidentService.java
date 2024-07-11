@@ -1,6 +1,7 @@
 package api.condominio.portaria.service;
 
 import api.condominio.portaria.dtos.PhoneDTO;
+import api.condominio.portaria.dtos.apartament.ApartamentNumberDTO;
 import api.condominio.portaria.dtos.resident.CreateResidentDTO;
 import api.condominio.portaria.dtos.resident.MapperResident;
 import api.condominio.portaria.dtos.resident.ResponseResidentDTO;
@@ -51,8 +52,8 @@ public class ResidentService {
                 .stream().map(mapperResident::toDTO).toList();
     }
 
-    public List<ResponseResidentDTO> getResidentsByNumApto(String bloco, String numApto) {
-        return repository.findByApartamentNumAptoBlocoAndApartamentNumAptoNumAptoAndStatusEquals(bloco, numApto, RecordStatusEnum.ACTIVE)
+    public List<ResponseResidentDTO> getResidentsByNumApto(ApartamentNumberDTO aptNumberDto) {
+        return repository.findByApartamentNumAptoBlocoAndApartamentNumAptoNumAptoAndStatusEquals(aptNumberDto.bloco(), aptNumberDto.numApto(), RecordStatusEnum.ACTIVE)
                 .stream().map(mapperResident::toDTO).toList();
     }
 

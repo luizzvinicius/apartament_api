@@ -6,6 +6,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class MapperResident {
     public ResponseResidentDTO toDTO(Resident d) {
-        return new ResponseResidentDTO(d.getId(), d.getApartament().getNumApto(), d.getName(), d.getCpf(), d.getPhone());
+        return new ResponseResidentDTO(d.getId(), d.getApartament().getNumApto(), d.getName(), d.getCpf(), d.getPhone(), d.getCreatedAt());
     }
 }

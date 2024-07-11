@@ -35,11 +35,14 @@ public class ApartamentService {
         if (page.isEmpty()) {
             throw new RuntimeException();
         }
-        return new ApartamentPageDTO(page.toList(), page.getTotalPages(), page.getTotalElements());
+        var apartamets = page.get().map(mapperApartament::toDTO).toList();
+        return new ApartamentPageDTO(apartamets, page.getTotalPages(), page.getTotalElements());
     }
 
     @Transactional
-    public void deleteApartament(String bloco, String numApto) {
+    public void deleteApartament(ApartamentNumberDTO aptNumberDTO) {
+        var bloco = aptNumberDTO.bloco();
+        var numApto = aptNumberDTO.numApto();
         var apartament = repository.findByNumAptoBlocoAndNumAptoNumAptoAndStatusEquals(bloco, numApto, RecordStatusEnum.ACTIVE)
                 .orElseThrow(RuntimeException::new);
         var ownerId = apartament.getOwner().getId();

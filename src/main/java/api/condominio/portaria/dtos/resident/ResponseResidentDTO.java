@@ -2,6 +2,7 @@ package api.condominio.portaria.dtos.resident;
 
 import api.condominio.portaria.models.embeddable.ApartamentNumber;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 public record ResponseResidentDTO(
@@ -9,5 +10,6 @@ public record ResponseResidentDTO(
         ApartamentNumber numApto,
         String name,
         String cpf,
-        String phone
+        String phone,
+        LocalDateTime createdAt
 ) { }

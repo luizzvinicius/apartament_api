@@ -1,6 +1,7 @@
 package api.condominio.portaria.controller;
 
 import api.condominio.portaria.dtos.PhoneDTO;
+import api.condominio.portaria.dtos.apartament.ApartamentNumberDTO;
 import api.condominio.portaria.dtos.resident.CreateResidentDTO;
 import api.condominio.portaria.dtos.resident.ResponseResidentDTO;
 import api.condominio.portaria.service.ResidentService;
@@ -32,9 +33,8 @@ public class ResidentController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ResponseResidentDTO>> getResidentsByNumApto(@RequestParam("bloco") String bloco,
-                                                                           @RequestParam("numApto") String numApto) {
-        return ResponseEntity.status(HttpStatus.OK).body(service.getResidentsByNumApto(bloco, numApto));
+    public ResponseEntity<List<ResponseResidentDTO>> getResidentsByNumApto(@RequestBody @Valid ApartamentNumberDTO apartamentNumberDTO) {
+        return ResponseEntity.status(HttpStatus.OK).body(service.getResidentsByNumApto(apartamentNumberDTO));
     }
 
     @PutMapping
