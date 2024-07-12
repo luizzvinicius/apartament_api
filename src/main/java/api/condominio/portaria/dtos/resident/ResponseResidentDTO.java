@@ -12,4 +12,4 @@ public record ResponseResidentDTO(
         String cpf,
         String phone,
         LocalDateTime createdAt
-) { }
+) {}
