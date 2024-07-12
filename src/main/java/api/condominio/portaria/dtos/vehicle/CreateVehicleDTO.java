@@ -15,5 +15,5 @@ public record CreateVehicleDTO(
         @ValueOfEnum(enumClass = VehicleCategoryEnum.class) String category,
         @NotBlank @Size(min = 3, max = 45) String color,
         @NotBlank @Size(min = 2, max = 50) String model,
-        @NotBlank @Size(min = 4, max = 100) String observation
+        String observation
 ) { }
