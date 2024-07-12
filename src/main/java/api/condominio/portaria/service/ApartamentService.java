@@ -1,5 +1,6 @@
 package api.condominio.portaria.service;
 
+import api.condominio.portaria.exceptions.RecordNotFoundException;
 import api.condominio.portaria.repository.*;
 import api.condominio.portaria.dtos.apartament.*;
 import api.condominio.portaria.enums.RecordStatusEnum;
@@ -27,13 +28,13 @@ public class ApartamentService {
 
     public ResponseApartamentDTO findSpecificApartament(ApartamentNumberDTO apartamentNumberDTO) {
         return repository.findByNumAptoBlocoAndNumAptoNumAptoAndStatusEquals(apartamentNumberDTO.bloco(), apartamentNumberDTO.numApto(), RecordStatusEnum.ACTIVE)
-                .map(mapperApartament::toDTO).orElseThrow(RuntimeException::new);
+                .map(mapperApartament::toDTO).orElseThrow(() -> new RecordNotFoundException("Apartament"));
     }
 
     public ApartamentPageDTO findApartamentBloco(String bloco, int p, int s) {
         Page<Apartament> page = repository.findAllApartamentBynumAptoBlocoEqualsAndStatusEquals(PageRequest.of(p, s), bloco, RecordStatusEnum.ACTIVE);
         if (page.isEmpty()) {
-            throw new RuntimeException();
+            throw new RecordNotFoundException("Apartament");
         }
         var apartamets = page.get().map(mapperApartament::toDTO).toList();
         return new ApartamentPageDTO(apartamets, page.getTotalPages(), page.getTotalElements());
@@ -44,7 +45,7 @@ public class ApartamentService {
         var bloco = aptNumberDTO.bloco();
         var numApto = aptNumberDTO.numApto();
         var apartament = repository.findByNumAptoBlocoAndNumAptoNumAptoAndStatusEquals(bloco, numApto, RecordStatusEnum.ACTIVE)
-                .orElseThrow(RuntimeException::new);
+                .orElseThrow(() -> new RecordNotFoundException("Apartament"));
         var ownerId = apartament.getOwner().getId();
 
         var registeredApartaments = repository.countByOwnerIdAndStatusEquals(ownerId, RecordStatusEnum.ACTIVE);

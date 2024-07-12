@@ -3,6 +3,7 @@ package api.condominio.portaria.service;
 import api.condominio.portaria.dtos.owner.*;
 import api.condominio.portaria.dtos.PhoneDTO;
 import api.condominio.portaria.enums.RecordStatusEnum;
+import api.condominio.portaria.exceptions.RecordNotFoundException;
 import api.condominio.portaria.models.Owner;
 import api.condominio.portaria.repository.ApartamentRepository;
 import api.condominio.portaria.repository.OwnerRepository;
@@ -43,21 +44,21 @@ public class OwnerService {
         );
 
         if (update == 0) {
-            throw new RuntimeException("Apartamento não encontrado");
+            throw new RecordNotFoundException("Apartament");
         }
 
         return mapperOwnerDTO.toDTO(owner);
     }
 
-    public ResponseOwnerDTO getOwner(UUID id) throws RuntimeException {
+    public ResponseOwnerDTO getOwner(UUID id) {
         return repository.findById(id).map(mapperOwnerDTO::toDTO)
-                .orElseThrow(RuntimeException::new);
+                .orElseThrow(() -> new RecordNotFoundException("Owner"));
     }
 
     public OwnerPageDTO getOwners(int p, int size) {
         Page<Owner> page = repository.findAllOwnerByStatusEquals(RecordStatusEnum.ACTIVE, PageRequest.of(p, size));
         if (page.isEmpty()) {
-            throw new RuntimeException("pagina vazia");
+            throw new RecordNotFoundException("Owner page");
         }
         return new OwnerPageDTO(page.get().map(mapperOwnerDTO::toDTO).toList(), page.getTotalPages(), page.getTotalElements());
     }
@@ -67,6 +68,6 @@ public class OwnerService {
         return repository.findById(dto.id()).map(owner -> {
             owner.setPhone(dto.phone());
             return mapperOwnerDTO.toDTO(repository.save(owner));
-        }).orElseThrow(RuntimeException::new);
+        }).orElseThrow(() -> new RecordNotFoundException("Owner"));
     }
 }

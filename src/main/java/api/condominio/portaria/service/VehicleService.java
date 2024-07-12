@@ -3,6 +3,7 @@ package api.condominio.portaria.service;
 import api.condominio.portaria.dtos.vehicle.*;
 import api.condominio.portaria.enums.RecordStatusEnum;
 import api.condominio.portaria.enums.VehicleCategoryConverter;
+import api.condominio.portaria.exceptions.RecordNotFoundException;
 import api.condominio.portaria.models.Vehicle;
 import api.condominio.portaria.repository.ApartamentRepository;
 import api.condominio.portaria.repository.VehicleRepository;
@@ -29,14 +30,9 @@ public class VehicleService {
     @Transactional
     public ResponseVehicleDTO createVehicle(CreateVehicleDTO dto) {
         var apartament = apartamentRepository.findByNumAptoBlocoAndNumAptoNumAptoAndStatusEquals(dto.bloco(), dto.numApto(), RecordStatusEnum.ACTIVE)
-                .orElseThrow(RuntimeException::new);
+                .orElseThrow(() -> new RecordNotFoundException("Apartament"));
 
-        var vehicle = new Vehicle();
-        vehicle.setPlaca(dto.placa().toLowerCase(Locale.ROOT));
-        vehicle.setApartament(apartament);
-        vehicle.setCategory(new VehicleCategoryConverter().convertToEntityAttribute(dto.category()));
-        vehicle.setColor(dto.color());
-        vehicle.setModel(dto.model());
+        var vehicle = new Vehicle(dto.placa(), apartament, new VehicleCategoryConverter().convertToEntityAttribute(dto.category()), dto.color(), dto.model());
         if (dto.observation() != null) {
             vehicle.setNote(dto.observation());
         }
@@ -51,17 +47,20 @@ public class VehicleService {
     public ResponseVehicleDTO getVehicleByPlaca(String placa) {
         return repository.findById(placa.toLowerCase(Locale.ROOT))
                 .map(mapperVehicle::toDTO)
-                .orElseThrow(RuntimeException::new);
+                .orElseThrow(() -> new RecordNotFoundException("Vehicle"));
     }
 
     public List<ResponseVehicleDTO> getVehicleByBloco(String bloco) {
-        return repository.findAllByApartamentNumAptoBlocoEquals(bloco).stream()
-                .map(mapperVehicle::toDTO).toList();
+        List<Vehicle> vehicles = repository.findAllByApartamentNumAptoBlocoEquals(bloco);
+        if (vehicles.isEmpty()) {
+            throw new RecordNotFoundException("Vehicle");
+        }
+        return vehicles.stream().map(mapperVehicle::toDTO).toList();
     }
 
     @Transactional
     public ResponseVehicleDTO updateVehicleNote(UpdateNoteDTO dto) {
-        var vehicle = repository.findById(dto.placa()).orElseThrow(RuntimeException::new);
+        var vehicle = repository.findById(dto.placa()).orElseThrow(() -> new RecordNotFoundException("Vehicle"));
         vehicle.setNote(dto.note());
         return mapperVehicle.toDTO(repository.save(vehicle));
     }
@@ -70,7 +69,7 @@ public class VehicleService {
     public void deleteVehicle(String placa) {
         var deleted = repository.deleteByPlaca(placa.toLowerCase(Locale.ROOT));
         if (deleted == 0) {
-            throw new RuntimeException("Nenhum veículo deletado");
+            throw new RecordNotFoundException("Vehicle");
         }
     }
 }

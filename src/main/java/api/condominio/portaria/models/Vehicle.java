@@ -16,6 +16,7 @@ import lombok.Setter;
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.Locale;
 import java.util.Objects;
 
 @Getter
@@ -60,6 +61,14 @@ public class Vehicle implements Serializable {
     @NotNull
     @Column(name = "data_cadastro", nullable = false)
     private LocalDateTime createdAt = LocalDateTime.now();
+
+    public Vehicle(String placa, Apartament apt, VehicleCategoryEnum category, String color, String model) {
+        this.placa = placa.toLowerCase(Locale.ROOT);
+        this.apartament = apt;
+        this.category = category;
+        this.color = color;
+        this.model = model;
+    }
 
     @Override
     public boolean equals(Object o) {

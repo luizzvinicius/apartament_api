@@ -6,6 +6,7 @@ import api.condominio.portaria.dtos.resident.CreateResidentDTO;
 import api.condominio.portaria.dtos.resident.MapperResident;
 import api.condominio.portaria.dtos.resident.ResponseResidentDTO;
 import api.condominio.portaria.enums.RecordStatusEnum;
+import api.condominio.portaria.exceptions.RecordNotFoundException;
 import api.condominio.portaria.models.Resident;
 import api.condominio.portaria.models.embeddable.ApartamentNumber;
 import api.condominio.portaria.repository.ApartamentRepository;
@@ -33,7 +34,7 @@ public class ResidentService {
     @Transactional
     public ResponseResidentDTO createResident(CreateResidentDTO residentDTO) {
         var apartament = apartamentRepository.findById(new ApartamentNumber(residentDTO.bloco(), residentDTO.numApto()))
-                .orElseThrow(RuntimeException::new);
+                .orElseThrow(() -> new RecordNotFoundException("Apartament"));
 
         Resident resident;
         Optional<Resident> optResident = repository.findByCpfEquals(residentDTO.cpf());
@@ -48,18 +49,25 @@ public class ResidentService {
     }
 
     public List<ResponseResidentDTO> getBlocoResidents(String bloco) {
-        return repository.findByApartamentNumAptoBlocoAndStatusEquals(bloco, RecordStatusEnum.ACTIVE)
-                .stream().map(mapperResident::toDTO).toList();
+        List<Resident> residents = repository.findByApartamentNumAptoBlocoAndStatusEquals(bloco, RecordStatusEnum.ACTIVE);
+        if (residents.isEmpty()) {
+            throw new RecordNotFoundException("Bloco residents " + bloco);
+        }
+        return residents.stream().map(mapperResident::toDTO).toList();
     }
 
     public List<ResponseResidentDTO> getResidentsByNumApto(ApartamentNumberDTO aptNumberDto) {
-        return repository.findByApartamentNumAptoBlocoAndApartamentNumAptoNumAptoAndStatusEquals(aptNumberDto.bloco(), aptNumberDto.numApto(), RecordStatusEnum.ACTIVE)
-                .stream().map(mapperResident::toDTO).toList();
+        List<Resident> residents = repository.findByApartamentNumAptoBlocoAndApartamentNumAptoNumAptoAndStatusEquals(
+                aptNumberDto.bloco(), aptNumberDto.numApto(), RecordStatusEnum.ACTIVE);
+        if (residents.isEmpty()) {
+            throw new RecordNotFoundException("Apartament residents " + aptNumberDto);
+        }
+        return residents.stream().map(mapperResident::toDTO).toList();
     }
 
     @Transactional
     public ResponseResidentDTO updatePhone(PhoneDTO phone) {
-        var resident = repository.findById(phone.id()).orElseThrow(RuntimeException::new);
+        var resident = repository.findById(phone.id()).orElseThrow(() -> new RecordNotFoundException("Resident"));
         resident.setPhone(phone.phone());
         var updatedResident = repository.save(resident);
         return mapperResident.toDTO(updatedResident);
@@ -69,7 +77,7 @@ public class ResidentService {
     public void deleteResident(UUID id) {
         var update = repository.updateResidentStatus(id, RecordStatusEnum.INACTIVE.getValue());
         if (update == 0) {
-            throw new RuntimeException("Morador não encontrado");
+            throw new RecordNotFoundException("Resident");
         }
     }
 }
