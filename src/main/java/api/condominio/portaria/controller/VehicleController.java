@@ -4,7 +4,10 @@ import api.condominio.portaria.dtos.vehicle.CreateVehicleDTO;
 import api.condominio.portaria.dtos.vehicle.ResponseVehicleDTO;
 import api.condominio.portaria.dtos.vehicle.UpdateNoteDTO;
 import api.condominio.portaria.service.VehicleService;
+import api.condominio.portaria.validations.placa.PlacaValidation;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Positive;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -12,9 +15,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RestController()
-@RequestMapping("/api/v1/vehicle")
 @Validated
+@RestController
+@RequestMapping("/api/v1/vehicle")
 public class VehicleController {
     private final VehicleService service;
 
@@ -28,12 +31,12 @@ public class VehicleController {
     }
 
     @GetMapping("/placa/{placa}")
-    public ResponseEntity<ResponseVehicleDTO> getVehicleByplaca(@PathVariable String placa) {
+    public ResponseEntity<ResponseVehicleDTO> getVehicleByplaca(@PathVariable @PlacaValidation String placa) {
         return ResponseEntity.ok(service.getVehicleByPlaca(placa));
     }
 
     @GetMapping("/bloco/{bloco}")
-    public ResponseEntity<List<ResponseVehicleDTO>> getVehiclesByBloco(@PathVariable String bloco) {
+    public ResponseEntity<List<ResponseVehicleDTO>> getVehiclesByBloco(@PathVariable @Positive @Max(29) String bloco) {
         return ResponseEntity.ok(service.getVehicleByBloco(bloco));
     }
 
@@ -44,7 +47,7 @@ public class VehicleController {
 
     @DeleteMapping("/{placa}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteVehicle(@PathVariable String placa) {
+    public void deleteVehicle(@PathVariable @PlacaValidation String placa) {
         service.deleteVehicle(placa);
     }
 }

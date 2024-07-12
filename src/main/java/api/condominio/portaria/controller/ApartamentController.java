@@ -9,8 +9,10 @@ import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.PositiveOrZero;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+@Validated
 @RestController
 @RequestMapping("/api/v1/apartament")
 public class ApartamentController {
@@ -26,7 +28,7 @@ public class ApartamentController {
     }
 
     @GetMapping("/{bloco}")
-    public ResponseEntity<ApartamentPageDTO> findApartamentsBloco(@PathVariable String bloco,
+    public ResponseEntity<ApartamentPageDTO> findApartamentsBloco(@PathVariable @Positive @Max(29) String bloco,
                                                                   @RequestParam(defaultValue = "0") @PositiveOrZero int p,
                                                                   @RequestParam(defaultValue = "8") @Positive @Max(16) int s
                                                                   ) {

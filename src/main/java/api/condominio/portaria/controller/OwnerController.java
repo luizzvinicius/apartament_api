@@ -43,7 +43,7 @@ public class OwnerController {
     }
 
     @PutMapping
-    public ResponseEntity<ResponseOwnerDTO> updateOwnersPhone(@RequestBody PhoneDTO phone) {
+    public ResponseEntity<ResponseOwnerDTO> updateOwnersPhone(@RequestBody @Valid PhoneDTO phone) {
         var owner = service.updateOwnerPhone(phone);
         return ResponseEntity.ok(owner);
     }
