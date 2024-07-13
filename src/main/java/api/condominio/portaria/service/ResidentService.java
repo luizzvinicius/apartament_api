@@ -7,6 +7,7 @@ import api.condominio.portaria.dtos.resident.MapperResident;
 import api.condominio.portaria.dtos.resident.ResponseResidentDTO;
 import api.condominio.portaria.enums.RecordStatusEnum;
 import api.condominio.portaria.exceptions.RecordNotFoundException;
+import api.condominio.portaria.exceptions.RegisterOverflow;
 import api.condominio.portaria.models.Resident;
 import api.condominio.portaria.models.embeddable.ApartamentNumber;
 import api.condominio.portaria.repository.ApartamentRepository;
@@ -33,6 +34,12 @@ public class ResidentService {
 
     @Transactional
     public ResponseResidentDTO createResident(CreateResidentDTO residentDTO) {
+        var residentQtd = repository.countByApartamentNumAptoBlocoAndApartamentNumAptoNumAptoAndStatusEquals(residentDTO.bloco(), residentDTO.numApto(), RecordStatusEnum.ACTIVE);
+        final int MAX_RESIDENTS = 4;
+        if (residentQtd == MAX_RESIDENTS) {
+            throw new RegisterOverflow(MAX_RESIDENTS,"Residents");
+        }
+
         var apartament = apartamentRepository.findById(new ApartamentNumber(residentDTO.bloco(), residentDTO.numApto()))
                 .orElseThrow(() -> new RecordNotFoundException("Apartament"));
 
@@ -60,7 +67,7 @@ public class ResidentService {
         List<Resident> residents = repository.findByApartamentNumAptoBlocoAndApartamentNumAptoNumAptoAndStatusEquals(
                 aptNumberDto.bloco(), aptNumberDto.numApto(), RecordStatusEnum.ACTIVE);
         if (residents.isEmpty()) {
-            throw new RecordNotFoundException("Apartament residents " + aptNumberDto);
+            throw new RecordNotFoundException(String.format("Apartament (%s %s) Residents", aptNumberDto.bloco(), aptNumberDto.numApto()));
         }
         return residents.stream().map(mapperResident::toDTO).toList();
     }

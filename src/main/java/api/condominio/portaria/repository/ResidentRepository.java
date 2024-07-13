@@ -16,6 +16,8 @@ public interface ResidentRepository extends JpaRepository<Resident, UUID> {
     List<Resident> findByApartamentNumAptoBlocoAndApartamentNumAptoNumAptoAndStatusEquals(String b, String numApto, RecordStatusEnum s);
     List<Resident> findByApartamentNumAptoBlocoAndStatusEquals(String b, RecordStatusEnum s);
 
+    Integer countByApartamentNumAptoBlocoAndApartamentNumAptoNumAptoAndStatusEquals(String bloco, String numApto, RecordStatusEnum s);
+
     Optional<Resident> findByCpfEquals(String cpf);
 
     @Modifying

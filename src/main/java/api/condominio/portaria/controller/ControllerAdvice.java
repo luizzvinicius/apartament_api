@@ -1,6 +1,7 @@
 package api.condominio.portaria.controller;
 
 import api.condominio.portaria.exceptions.RecordNotFoundException;
+import api.condominio.portaria.exceptions.RegisterOverflow;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
@@ -15,6 +16,12 @@ public class ControllerAdvice {
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public String handle404(RecordNotFoundException e) {
         return e.getMessage();
+    }
+
+    @ExceptionHandler(RegisterOverflow.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public String handleRegisterOverflow(RegisterOverflow e) {
+        return String.format("{'error': BAD REQUEST, 'message': %s}", e.getMessage());
     }
 
     // HTTP

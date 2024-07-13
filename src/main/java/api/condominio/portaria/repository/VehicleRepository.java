@@ -9,5 +9,6 @@ import java.util.List;
 @Repository
 public interface VehicleRepository extends JpaRepository<Vehicle, String> {
     List<Vehicle> findAllByApartamentNumAptoBlocoEquals(String bloco);
+    Integer countByApartamentNumAptoBlocoAndApartamentNumAptoNumApto(String bloco, String numApto);
     Integer deleteByPlaca(String placa);
 }
