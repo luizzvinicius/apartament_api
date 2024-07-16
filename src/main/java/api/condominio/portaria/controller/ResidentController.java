@@ -5,6 +5,7 @@ import api.condominio.portaria.dtos.apartament.ApartamentNumberDTO;
 import api.condominio.portaria.dtos.resident.CreateResidentDTO;
 import api.condominio.portaria.dtos.resident.ResponseResidentDTO;
 import api.condominio.portaria.service.ResidentService;
+import api.condominio.portaria.validations.apartament_number.BlocoValidation;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Positive;
@@ -32,7 +33,7 @@ public class ResidentController {
     }
 
     @GetMapping("/bloco/{bloco}")
-    public ResponseEntity<List<ResponseResidentDTO>> getBlocoResidents(@PathVariable @Positive @Max(29) String bloco) {
+    public ResponseEntity<List<ResponseResidentDTO>> getBlocoResidents(@PathVariable @BlocoValidation String bloco) {
         return ResponseEntity.status(HttpStatus.OK).body(service.getBlocoResidents(bloco));
     }
 

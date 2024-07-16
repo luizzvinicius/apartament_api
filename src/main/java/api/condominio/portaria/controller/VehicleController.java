@@ -4,10 +4,9 @@ import api.condominio.portaria.dtos.vehicle.CreateVehicleDTO;
 import api.condominio.portaria.dtos.vehicle.ResponseVehicleDTO;
 import api.condominio.portaria.dtos.vehicle.UpdateNoteDTO;
 import api.condominio.portaria.service.VehicleService;
+import api.condominio.portaria.validations.apartament_number.BlocoValidation;
 import api.condominio.portaria.validations.placa.PlacaValidation;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Positive;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -36,7 +35,7 @@ public class VehicleController {
     }
 
     @GetMapping("/bloco/{bloco}")
-    public ResponseEntity<List<ResponseVehicleDTO>> getVehiclesByBloco(@PathVariable @Positive @Max(29) String bloco) {
+    public ResponseEntity<List<ResponseVehicleDTO>> getVehiclesByBloco(@PathVariable @BlocoValidation String bloco) {
         return ResponseEntity.ok(service.getVehicleByBloco(bloco));
     }
 

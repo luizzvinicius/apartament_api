@@ -4,6 +4,7 @@ import api.condominio.portaria.dtos.apartament.ApartamentPageDTO;
 import api.condominio.portaria.dtos.apartament.ApartamentNumberDTO;
 import api.condominio.portaria.dtos.apartament.ResponseApartamentDTO;
 import api.condominio.portaria.service.ApartamentService;
+import api.condominio.portaria.validations.apartament_number.BlocoValidation;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Positive;
@@ -28,7 +29,7 @@ public class ApartamentController {
     }
 
     @GetMapping("/{bloco}")
-    public ResponseEntity<ApartamentPageDTO> findApartamentsBloco(@PathVariable @Positive @Max(29) String bloco,
+    public ResponseEntity<ApartamentPageDTO> findApartamentsBloco(@PathVariable @BlocoValidation String bloco,
                                                                   @RequestParam(defaultValue = "0") @PositiveOrZero int p,
                                                                   @RequestParam(defaultValue = "8") @Positive @Max(16) int s
                                                                   ) {
