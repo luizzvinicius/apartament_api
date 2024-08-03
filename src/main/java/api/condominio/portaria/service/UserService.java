@@ -45,13 +45,14 @@ public class UserService implements UserDetailsService {
 
     public LoginResponseDTO generateToken(Authentication auth) {
         var now = Instant.now();
+        var user = this.loadUserByUsername(auth.getName());
         var role = auth.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.joining(" "));
         var expiresIn = 500L;
         var claims = JwtClaimsSet.builder()
                 .issuer(this.issuer)
                 .issuedAt(now)
                 .expiresAt(now.plusSeconds(expiresIn))
-                .subject(auth.getName())
+                .subject(user.getId().toString())
                 .claim("scope", role)
                 .build();
         var token = encoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
