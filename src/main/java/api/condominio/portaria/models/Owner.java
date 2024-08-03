@@ -40,7 +40,7 @@ public class Owner implements Serializable {
     private String name;
 
     @NotBlank
-    @Column(nullable = false) // definir length do hash
+    @Column(nullable = false)
     private String cpf;
 
     @Size(min = 11)

@@ -4,8 +4,11 @@ target/
 !**/src/main/**/target/
 !**/src/test/**/target/
 
-### Personalizado ###
+### Custom ###
+*.txt
 *.sql
+app.key
+app.pub
 
 ### STS ###
 .apt_generated
