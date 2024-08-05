@@ -1,5 +1,6 @@
 package api.condominio.portaria.enums;
 
+import api.condominio.portaria.exceptions.InvalidEnumException;
 import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;
 
@@ -15,7 +16,7 @@ public class RecordStatusConverter implements AttributeConverter<RecordStatusEnu
         return switch (s) {
             case "ativo" -> RecordStatusEnum.ACTIVE;
             case "inativo" -> RecordStatusEnum.INACTIVE;
-            default -> throw new IllegalArgumentException("Status inválido");
+            default -> throw new InvalidEnumException(s);
         };
     }
 }

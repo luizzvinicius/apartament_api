@@ -1,5 +1,6 @@
 package api.condominio.portaria.enums;
 
+import api.condominio.portaria.exceptions.InvalidEnumException;
 import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;
 
@@ -15,7 +16,7 @@ public class RoleEnumConverter implements AttributeConverter<RoleEnum, String> {
         return switch (s) {
             case "PORTEIRO" -> RoleEnum.PORTEIRO;
             case "SINDICO" -> RoleEnum.SINDICO;
-            default -> throw new IllegalArgumentException("Categoria inválido");
+            default -> throw new InvalidEnumException(s);
         };
     }
 }
