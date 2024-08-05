@@ -16,4 +16,4 @@ public record CreateVehicleDTO(
         @NotBlank @Size(min = 3, max = 45) String color,
         @NotBlank @Size(min = 2, max = 50) String model,
         @Size(max = 100) String observation
-) { }
+) {}

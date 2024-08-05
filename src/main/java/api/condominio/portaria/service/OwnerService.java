@@ -56,7 +56,7 @@ public class OwnerService {
     }
 
     public OwnerPageDTO getOwners(int p, int size) {
-        Page<Owner> page = repository.findAllOwnerByStatusEquals(RecordStatusEnum.ACTIVE, PageRequest.of(p, size));
+        Page<Owner> page = repository.findAllByStatusEquals(RecordStatusEnum.ACTIVE, PageRequest.of(p, size));
         if (page.isEmpty()) {
             throw new RecordNotFoundException("Owner page");
         }
