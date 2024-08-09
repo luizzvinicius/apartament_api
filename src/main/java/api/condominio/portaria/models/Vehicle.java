@@ -1,23 +1,23 @@
 package api.condominio.portaria.models;
 
-import api.condominio.portaria.enums.VehicleCategoryConverter;
-import api.condominio.portaria.enums.VehicleCategoryEnum;
-import api.condominio.portaria.validations.placa.PlacaValidation;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
+import api.condominio.portaria.enums.VehicleCategoryEnum;
+import api.condominio.portaria.enums.VehicleCategoryConverter;
+import api.condominio.portaria.validations.placa.PlacaValidation;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import lombok.AllArgsConstructor;
+import jakarta.validation.constraints.NotBlank;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.time.LocalDateTime;
 import java.util.Locale;
 import java.util.Objects;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -62,12 +62,18 @@ public class Vehicle implements Serializable {
     @Column(name = "data_cadastro", nullable = false)
     private LocalDateTime createdAt = LocalDateTime.now();
 
-    public Vehicle(String placa, Apartament apt, VehicleCategoryEnum category, String color, String model) {
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "updated_by", referencedColumnName = "id", nullable = false)
+    private User updatedBy;
+
+    public Vehicle(String placa, Apartament apt, VehicleCategoryEnum category, String color, String model, User user) {
         this.placa = placa.toLowerCase(Locale.ROOT);
         this.apartament = apt;
         this.category = category;
         this.color = color;
         this.model = model;
+        this.updatedBy = user;
     }
 
     @Override

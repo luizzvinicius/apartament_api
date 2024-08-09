@@ -9,9 +9,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
-import java.util.UUID;
-
 @SpringBootApplication
 public class PortariaApplication implements CommandLineRunner {
 	public final UserRepository userRepository;
@@ -34,9 +31,12 @@ public class PortariaApplication implements CommandLineRunner {
 		userRepository.findByEmail(email).ifPresentOrElse(
 				user -> System.out.println("usuário admin já existe " + user.getAuthorities().stream().toList()),
 				() -> userRepository.save(new User(
-                        UUID.randomUUID(), "Luiz",
-                        "12048798745", email,
-                        encoder.encode("vinicius"), roleAdmin, LocalDateTime.now()))
+                        "Luiz",
+                        "12048798745",
+						email,
+                        encoder.encode("vinicius"),
+						roleAdmin)
+				)
 		);
 	}
 }

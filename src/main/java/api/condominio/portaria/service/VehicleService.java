@@ -1,53 +1,56 @@
 package api.condominio.portaria.service;
 
 import api.condominio.portaria.dtos.vehicle.*;
+import api.condominio.portaria.models.Vehicle;
 import api.condominio.portaria.enums.RecordStatusEnum;
 import api.condominio.portaria.enums.VehicleCategoryConverter;
-import api.condominio.portaria.exceptions.RecordNotFoundException;
 import api.condominio.portaria.exceptions.RegisterOverflow;
-import api.condominio.portaria.models.Vehicle;
-import api.condominio.portaria.repository.ApartamentRepository;
+import api.condominio.portaria.exceptions.RecordNotFoundException;
+import api.condominio.portaria.repository.UserRepository;
 import api.condominio.portaria.repository.VehicleRepository;
+import api.condominio.portaria.repository.ApartamentRepository;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Locale;
 import java.util.List;
+import java.util.Locale;
+import java.util.UUID;
 
 @Service
 @Validated
 public class VehicleService {
+    private static final int MAXVEHICLE = 4;
     private final VehicleRepository repository;
     private final ApartamentRepository apartamentRepository;
     private final MapperVehicle mapperVehicle;
+    private final UserRepository userRepository;
 
-    public VehicleService(VehicleRepository repository, ApartamentRepository apartamentRepository, MapperVehicle mapperVehicle) {
+    public VehicleService(VehicleRepository repository, ApartamentRepository apartamentRepository, MapperVehicle mapperVehicle, UserRepository userRepository) {
         this.repository = repository;
         this.apartamentRepository = apartamentRepository;
         this.mapperVehicle = mapperVehicle;
+        this.userRepository = userRepository;
     }
 
     @Transactional
-    public ResponseVehicleDTO createVehicle(CreateVehicleDTO dto) {
-        final int MAX_VEHICLE = 4;
+    public ResponseVehicleDTO createVehicle(UUID userId, CreateVehicleDTO dto) {
+        var user = userRepository.findById(userId).orElseThrow(() -> new RecordNotFoundException("User"));
         var vehicleQtd = repository.countByApartamentNumAptoBlocoAndApartamentNumAptoNumApto(dto.bloco(), dto.numApto());
-        if (vehicleQtd == MAX_VEHICLE) {
-            throw new RegisterOverflow(MAX_VEHICLE, "Vehicles");
+        if (vehicleQtd == MAXVEHICLE) {
+            throw new RegisterOverflow(MAXVEHICLE, "Vehicles");
         }
 
         var apartament = apartamentRepository.findByNumAptoBlocoAndNumAptoNumAptoAndStatusEquals(dto.bloco(), dto.numApto(), RecordStatusEnum.ACTIVE)
                 .orElseThrow(() -> new RecordNotFoundException("Apartament"));
-        var vehicle = new Vehicle(dto.placa(), apartament, new VehicleCategoryConverter().convertToEntityAttribute(dto.category()), dto.color(), dto.model());
+        var vehicle = new Vehicle(dto.placa(), apartament, new VehicleCategoryConverter().convertToEntityAttribute(dto.category()), dto.color(), dto.model(), user);
         if (dto.observation() != null) {
             vehicle.setNote(dto.observation());
         }
 
-        repository.save(vehicle);
-        return new ResponseVehicleDTO(
-                vehicle.getPlaca(), vehicle.getApartament().getNumApto(),
-                vehicle.getCategory(), vehicle.getColor(), vehicle.getModel(),
-                vehicle.getNote(), vehicle.getCreatedAt());
+        return mapperVehicle.toDTO(
+                repository.save(vehicle)
+        );
     }
 
     public ResponseVehicleDTO getVehicleByPlaca(String placa) {

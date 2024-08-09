@@ -1,5 +1,6 @@
 package api.condominio.portaria.dtos.vehicle;
 
+import api.condominio.portaria.dtos.user.ResponseUserDTO;
 import api.condominio.portaria.enums.VehicleCategoryEnum;
 import api.condominio.portaria.models.embeddable.ApartamentNumber;
 
@@ -12,5 +13,6 @@ public record ResponseVehicleDTO(
         String color,
         String model,
         String observation,
-        LocalDateTime createdAt
-) { }
+        LocalDateTime createdAt,
+        ResponseUserDTO updated_by
+) {}

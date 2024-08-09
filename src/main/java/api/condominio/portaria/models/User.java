@@ -3,8 +3,8 @@ package api.condominio.portaria.models;
 import lombok.*;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotBlank;
 import api.condominio.portaria.enums.RoleEnum;
 import api.condominio.portaria.enums.RoleEnumConverter;
 import org.springframework.security.core.GrantedAuthority;
@@ -63,6 +63,12 @@ public class User implements Serializable, UserDetails {
     @NotNull
     @Column(name = "data_cadastro", nullable = false)
     private LocalDateTime createdAt = LocalDateTime.now();
+
+    @OneToMany(mappedBy = "updatedBy", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Resident> residents;
+
+    @OneToMany(mappedBy = "updatedBy", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Vehicle> vehicles;
 
     public User(String name, String cpf, String email, String password, RoleEnum role) {
         this.name = name;

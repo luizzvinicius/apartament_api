@@ -1,18 +1,20 @@
 package api.condominio.portaria.controller;
 
+import org.springframework.web.bind.annotation.*;
+import jakarta.validation.Valid;
+import api.condominio.portaria.dtos.vehicle.UpdateNoteDTO;
 import api.condominio.portaria.dtos.vehicle.CreateVehicleDTO;
 import api.condominio.portaria.dtos.vehicle.ResponseVehicleDTO;
-import api.condominio.portaria.dtos.vehicle.UpdateNoteDTO;
 import api.condominio.portaria.service.VehicleService;
-import api.condominio.portaria.validations.apartament_number.BlocoValidation;
 import api.condominio.portaria.validations.placa.PlacaValidation;
-import jakarta.validation.Valid;
+import api.condominio.portaria.validations.apartament_number.BlocoValidation;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @Validated
 @RestController
@@ -25,8 +27,10 @@ public class VehicleController {
     }
 
     @PostMapping
-    public ResponseEntity<ResponseVehicleDTO> createVehicle(@RequestBody @Valid CreateVehicleDTO createValues) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(service.createVehicle(createValues));
+    public ResponseEntity<ResponseVehicleDTO> createVehicle(Authentication auth, @RequestBody @Valid CreateVehicleDTO createValues) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(
+                service.createVehicle(UUID.fromString(auth.getName()), createValues)
+        );
     }
 
     @GetMapping("/placa/{placa}")

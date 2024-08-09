@@ -1,43 +1,47 @@
 package api.condominio.portaria.service;
 
 import api.condominio.portaria.dtos.PhoneDTO;
-import api.condominio.portaria.dtos.apartament.ApartamentNumberDTO;
-import api.condominio.portaria.dtos.resident.CreateResidentDTO;
 import api.condominio.portaria.dtos.resident.MapperResident;
+import api.condominio.portaria.dtos.resident.CreateResidentDTO;
 import api.condominio.portaria.dtos.resident.ResponseResidentDTO;
+import api.condominio.portaria.dtos.apartament.ApartamentNumberDTO;
 import api.condominio.portaria.enums.RecordStatusEnum;
-import api.condominio.portaria.exceptions.RecordNotFoundException;
 import api.condominio.portaria.exceptions.RegisterOverflow;
+import api.condominio.portaria.exceptions.RecordNotFoundException;
 import api.condominio.portaria.models.Resident;
 import api.condominio.portaria.models.embeddable.ApartamentNumber;
-import api.condominio.portaria.repository.ApartamentRepository;
 import api.condominio.portaria.repository.ResidentRepository;
+import api.condominio.portaria.repository.ApartamentRepository;
+import api.condominio.portaria.repository.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.UUID;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
-import java.util.UUID;
 
 @Service
 public class ResidentService {
+    private static final int MAXRESIDENTS = 4;
     private final ResidentRepository repository;
     private final ApartamentRepository apartamentRepository;
     private final MapperResident mapperResident;
+    private final UserRepository userRepository;
 
-    public ResidentService(ResidentRepository repository, ApartamentRepository apRepository, MapperResident mapperResident) {
+    public ResidentService(ResidentRepository repository, ApartamentRepository apRepository, MapperResident mapperResident, UserRepository userRepository) {
         this.repository = repository;
         this.apartamentRepository = apRepository;
         this.mapperResident = mapperResident;
+        this.userRepository = userRepository;
     }
 
     @Transactional
-    public ResponseResidentDTO createResident(CreateResidentDTO residentDTO) {
+    public ResponseResidentDTO createResident(UUID userId, CreateResidentDTO residentDTO) {
+        var user = userRepository.findById(userId).orElseThrow(() -> new RecordNotFoundException("User"));
         var residentQtd = repository.countByApartamentNumAptoBlocoAndApartamentNumAptoNumAptoAndStatusEquals(residentDTO.bloco(), residentDTO.numApto(), RecordStatusEnum.ACTIVE);
-        final int MAX_RESIDENTS = 4;
-        if (residentQtd == MAX_RESIDENTS) {
-            throw new RegisterOverflow(MAX_RESIDENTS,"Residents");
+        if (residentQtd == MAXRESIDENTS) {
+            throw new RegisterOverflow(MAXRESIDENTS,"Residents");
         }
 
         var apartament = apartamentRepository.findById(new ApartamentNumber(residentDTO.bloco(), residentDTO.numApto()))
@@ -46,7 +50,7 @@ public class ResidentService {
         Resident resident;
         Optional<Resident> optResident = repository.findByCpfEquals(residentDTO.cpf());
         if (optResident.isEmpty()) {
-            resident = repository.save(new Resident(apartament, residentDTO.name().toLowerCase(Locale.ROOT), residentDTO.cpf(), residentDTO.phone()));
+            resident = repository.save(new Resident(apartament, residentDTO.name().toLowerCase(Locale.ROOT), residentDTO.cpf(), residentDTO.phone(), user));
         } else {
             resident = optResident.get();
             repository.updateResidentStatus(resident.getId(), RecordStatusEnum.ACTIVE.getValue());

@@ -31,7 +31,7 @@ public class ControllerAdvice {
     @ExceptionHandler(InvalidEnumException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public String invalidEnumConvertion(InvalidEnumException e) {
-    return e.getMessage();
+        return e.getMessage();
     }
 
     // HTTP
