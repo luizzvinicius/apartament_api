@@ -15,13 +15,15 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
-import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
+import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
+import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 
 import java.security.interfaces.RSAPublicKey;
 import java.security.interfaces.RSAPrivateKey;
+
+import static org.springframework.security.authorization.AuthorityAuthorizationManager.hasAuthority;
 
 @Configuration
 @EnableWebSecurity
@@ -36,10 +38,13 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http
-                .authorizeHttpRequests(auth -> auth.
-                        requestMatchers(HttpMethod.POST, "api/v1/auth/login").permitAll()
+                .securityMatcher("/api/v1/**")
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
+                        .requestMatchers(HttpMethod.DELETE, "/**").access(hasAuthority("SCOPE_SINDICO"))
                         .anyRequest().authenticated()
-                ).csrf(csrf -> csrf.disable())
+                )
+                .csrf(csrf -> csrf.disable())
                 .httpBasic(Customizer.withDefaults())
                 .oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults()))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
@@ -48,14 +53,14 @@ public class SecurityConfig {
 
     @Bean
     public JwtEncoder jwtEncoder() {
-        JWK jwk = new RSAKey.Builder(publicKey).privateKey(privateKey).build();
+        JWK jwk = new RSAKey.Builder(this.publicKey).privateKey(this.privateKey).build();
         var jwks = new ImmutableJWKSet<>(new JWKSet(jwk));
         return new NimbusJwtEncoder(jwks);
     }
 
     @Bean
     public JwtDecoder jwtDecoder() {
-        return NimbusJwtDecoder.withPublicKey(publicKey).build();
+        return NimbusJwtDecoder.withPublicKey(this.publicKey).build();
     }
 
     @Bean

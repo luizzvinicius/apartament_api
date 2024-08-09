@@ -7,6 +7,7 @@ import api.condominio.portaria.dtos.user.CreateUserDTO;
 import api.condominio.portaria.dtos.user.ResponseUserDTO;
 import api.condominio.portaria.repository.UserRepository;
 import api.condominio.portaria.dtos.user.LoginResponseDTO;
+import api.condominio.portaria.exceptions.InvalidEnumException;
 import org.springframework.stereotype.Service;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -47,7 +48,13 @@ public class UserService implements UserDetailsService {
         var now = Instant.now();
         var user = this.loadUserByUsername(auth.getName());
         var role = auth.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.joining(" "));
-        var expiresIn = 500L;
+
+        long expiresIn = switch (role) {
+            case "PORTEIRO" -> 4 * 3600;
+            case "SINDICO" -> 5 * 60;
+            default -> throw new InvalidEnumException(role);
+        };
+
         var claims = JwtClaimsSet.builder()
                 .issuer(this.issuer)
                 .issuedAt(now)
