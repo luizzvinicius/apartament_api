@@ -38,14 +38,14 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http
+                .csrf(csrf -> csrf.disable())
                 .securityMatcher("/api/v1/**")
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
-                        .requestMatchers(HttpMethod.DELETE, "/**").access(hasAuthority("SCOPE_SINDICO"))
+                        //.requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
+                        //.requestMatchers(HttpMethod.DELETE, "/**").access(hasAuthority("SCOPE_SINDICO"))
                         .anyRequest().authenticated()
                 )
-                .csrf(csrf -> csrf.disable())
-                .httpBasic(Customizer.withDefaults())
+                //.oauth2Login(Customizer.withDefaults())
                 .oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults()))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .build();
