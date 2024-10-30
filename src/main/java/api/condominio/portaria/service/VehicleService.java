@@ -1,21 +1,22 @@
 package api.condominio.portaria.service;
 
-import api.condominio.portaria.dtos.vehicle.*;
-import api.condominio.portaria.models.Vehicle;
+import api.condominio.portaria.dtos.vehicle.CreateVehicleDTO;
+import api.condominio.portaria.dtos.vehicle.MapperVehicle;
+import api.condominio.portaria.dtos.vehicle.ResponseVehicleDTO;
+import api.condominio.portaria.dtos.vehicle.UpdateNoteDTO;
 import api.condominio.portaria.enums.RecordStatusEnum;
 import api.condominio.portaria.enums.VehicleCategoryConverter;
-import api.condominio.portaria.exceptions.RegisterOverflow;
 import api.condominio.portaria.exceptions.RecordNotFoundException;
-import api.condominio.portaria.repository.UserRepository;
-import api.condominio.portaria.repository.VehicleRepository;
+import api.condominio.portaria.exceptions.RegisterOverflow;
+import api.condominio.portaria.models.Vehicle;
 import api.condominio.portaria.repository.ApartamentRepository;
+import api.condominio.portaria.repository.VehicleRepository;
 import org.springframework.stereotype.Service;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.annotation.Validated;
 
 import java.util.List;
 import java.util.Locale;
-import java.util.UUID;
 
 @Service
 @Validated
@@ -24,18 +25,15 @@ public class VehicleService {
     private final VehicleRepository repository;
     private final ApartamentRepository apartamentRepository;
     private final MapperVehicle mapperVehicle;
-    private final UserRepository userRepository;
 
-    public VehicleService(VehicleRepository repository, ApartamentRepository apartamentRepository, MapperVehicle mapperVehicle, UserRepository userRepository) {
+    public VehicleService(VehicleRepository repository, ApartamentRepository apartamentRepository, MapperVehicle mapperVehicle) {
         this.repository = repository;
         this.apartamentRepository = apartamentRepository;
         this.mapperVehicle = mapperVehicle;
-        this.userRepository = userRepository;
     }
 
     @Transactional
-    public ResponseVehicleDTO createVehicle(UUID userId, CreateVehicleDTO dto) {
-        var user = userRepository.findById(userId).orElseThrow(() -> new RecordNotFoundException("User"));
+    public ResponseVehicleDTO createVehicle(CreateVehicleDTO dto) {
         var vehicleQtd = repository.countByApartamentNumAptoBlocoAndApartamentNumAptoNumApto(dto.bloco(), dto.numApto());
         if (vehicleQtd == MAXVEHICLE) {
             throw new RegisterOverflow(MAXVEHICLE, "Vehicles");
@@ -43,7 +41,7 @@ public class VehicleService {
 
         var apartament = apartamentRepository.findByNumAptoBlocoAndNumAptoNumAptoAndStatusEquals(dto.bloco(), dto.numApto(), RecordStatusEnum.ACTIVE)
                 .orElseThrow(() -> new RecordNotFoundException("Apartament"));
-        var vehicle = new Vehicle(dto.placa(), apartament, new VehicleCategoryConverter().convertToEntityAttribute(dto.category()), dto.color(), dto.model(), user);
+        var vehicle = new Vehicle(dto.placa(), apartament, new VehicleCategoryConverter().convertToEntityAttribute(dto.category()), dto.color(), dto.model());
         if (dto.observation() != null) {
             vehicle.setNote(dto.observation());
         }

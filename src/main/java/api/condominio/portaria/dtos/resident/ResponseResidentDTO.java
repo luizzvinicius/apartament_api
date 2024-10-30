@@ -1,10 +1,9 @@
 package api.condominio.portaria.dtos.resident;
 
 import api.condominio.portaria.models.embeddable.ApartamentNumber;
-import api.condominio.portaria.dtos.user.ResponseUserDTO;
 
-import java.util.UUID;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 public record ResponseResidentDTO(
         UUID id,
@@ -12,6 +11,5 @@ public record ResponseResidentDTO(
         String name,
         String cpf,
         String phone,
-        LocalDateTime createdAt,
-        ResponseUserDTO updated_by
+        LocalDateTime createdAt
 ) {}

@@ -1,0 +1,57 @@
+server:
+  port: 8081
+  error:
+    include-stacktrace: never
+    include-message: never
+spring:
+  output:
+    ansi:
+      enabled: always
+  application:
+    name: 'API_apartament'
+  datasource:
+    url: ${db_url}
+    username: ${user}
+    password: ${password}
+    driver-class-name: 'org.postgresql.Driver'
+  jpa:
+    # show-sql: true
+    open-in-view: true
+    hibernate:
+      ddl-auto: update
+#    properties:
+#      jakarta:
+#        persistence:
+#          schema-generation:
+#            scripts:
+#              action: create
+#              create-target: "src/main/resources/schema.sql"
+      hibernate:
+        jdbc:
+          lob:
+            non_contextual_creation: true
+  web:
+    resources:
+      add-mappings: false
+  security:
+    oauth2:
+      client:
+        registration:
+          keycloack:
+            clientId: ${spring.application.name}
+            clientSecret: ${keycloak_secret}
+            scope:
+              - openid
+              - profile
+              - email
+        provider:
+          keycloack:
+            issuerUri: http://localhost:8080/realms/API_apartament
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8080/realms/API_apartament
+          jwk-set-uri: ${spring.security.oauth2.resourceserver.jwt.issuer-uri}/protocol/openid-connect/certs
+app:
+  templates: classpath:app.pub
+private:
+  key: classpath:app.key

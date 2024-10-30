@@ -1,22 +1,22 @@
 package api.condominio.portaria.models;
 
-import jakarta.persistence.*;
-import api.condominio.portaria.enums.RecordStatusEnum;
 import api.condominio.portaria.enums.RecordStatusConverter;
-import jakarta.validation.constraints.Size;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.NotBlank;
+import api.condominio.portaria.enums.RecordStatusEnum;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.NoArgsConstructor;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.util.UUID;
-import java.util.Objects;
 import java.time.LocalDateTime;
+import java.util.Objects;
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -59,17 +59,11 @@ public class Resident implements Serializable {
     @Column(name = "data_cadastro", nullable = false)
     private LocalDateTime createdAt = LocalDateTime.now();
 
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "updated_by", referencedColumnName = "id", nullable = false)
-    private User updatedBy;
-
-    public Resident(Apartament apt, String name, String cpf, String phone, User user) {
+    public Resident(Apartament apt, String name, String cpf, String phone) {
         this.apartament = apt;
         this.name = name;
         this.cpf = cpf;
         this.phone = phone;
-        this.updatedBy = user;
     }
 
     @Override
