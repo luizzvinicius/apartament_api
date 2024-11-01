@@ -58,6 +58,19 @@ class ApartamentTestIT {
     @Autowired
     VehicleRepository vehicleRepository;
 
+//    @TestConfiguration
+//    @Lazy
+//    static class Config {
+//        @Bean(name = "testRestTemplate")
+//        public TestRestTemplate restTemplate(@Value("${local.server.port}") int port) {
+//            var template = new RestTemplateBuilder()
+//                    .rootUri("http://localhost:8080/realms/API_apartament/protocol/openid-connect/token")
+////                    .rootUri("http://localhost:" + port)
+//                    .basicAuthentication("luiz_sindico", "admin");
+//            return new TestRestTemplate(template);
+//        }
+//    }
+
     @BeforeEach
     void init() {
         apartamentRepository.save(new Apartament("2", "203"));
