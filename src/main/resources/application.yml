@@ -51,7 +51,3 @@ spring:
         jwt:
           issuer-uri: http://localhost:8080/realms/API_apartament
           jwk-set-uri: ${spring.security.oauth2.resourceserver.jwt.issuer-uri}/protocol/openid-connect/certs
-app:
-  templates: classpath:app.pub
-private:
-  key: classpath:app.key
