@@ -36,7 +36,7 @@ public class OwnerService {
             owner = repository.save(mapperOwnerDTO.toEntity(createOwnerDTO));
         } else {
             owner = optOwner.get();
-            repository.updateOwnerStatus(optOwner.get().getId(), RecordStatusEnum.ACTIVE.getValue(), RecordStatusEnum.INACTIVE.getValue());
+            repository.updateOwnerStatus(owner.getId(), RecordStatusEnum.ACTIVE.getValue(), RecordStatusEnum.INACTIVE.getValue());
         }
 
         var update = apartamentRepository.updateIdProprietario(
