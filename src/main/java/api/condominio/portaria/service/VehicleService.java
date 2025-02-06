@@ -7,7 +7,7 @@ import api.condominio.portaria.dtos.vehicle.UpdateNoteDTO;
 import api.condominio.portaria.enums.RecordStatusEnum;
 import api.condominio.portaria.enums.VehicleCategoryConverter;
 import api.condominio.portaria.exceptions.RecordNotFoundException;
-import api.condominio.portaria.exceptions.RegisterOverflow;
+import api.condominio.portaria.exceptions.RegisterOverflowException;
 import api.condominio.portaria.models.Vehicle;
 import api.condominio.portaria.repository.ApartamentRepository;
 import api.condominio.portaria.repository.VehicleRepository;
@@ -36,7 +36,7 @@ public class VehicleService {
     public ResponseVehicleDTO createVehicle(CreateVehicleDTO dto) {
         var vehicleQtd = repository.countByApartamentNumAptoBlocoAndApartamentNumAptoNumApto(dto.bloco(), dto.numApto());
         if (vehicleQtd == MAXVEHICLE) {
-            throw new RegisterOverflow(MAXVEHICLE, "Vehicles");
+            throw new RegisterOverflowException(MAXVEHICLE, "Vehicles");
         }
 
         var apartament = apartamentRepository.findByNumAptoBlocoAndNumAptoNumAptoAndStatusEquals(dto.bloco(), dto.numApto(), RecordStatusEnum.ACTIVE)

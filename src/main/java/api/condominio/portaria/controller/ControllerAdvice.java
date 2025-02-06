@@ -22,9 +22,9 @@ public class ControllerAdvice {
         return e.getMessage();
     }
 
-    @ExceptionHandler(RegisterOverflow.class)
+    @ExceptionHandler(RegisterOverflowException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public String handleRegisterOverflow(RegisterOverflow e) {
+    public String handleRegisterOverflowException(RegisterOverflowException e) {
         return String.format("{'error': 'BAD_REQUEST', 'message': %s}", e.getMessage());
     }
 

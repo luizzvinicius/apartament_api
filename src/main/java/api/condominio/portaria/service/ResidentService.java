@@ -7,7 +7,7 @@ import api.condominio.portaria.dtos.resident.MapperResident;
 import api.condominio.portaria.dtos.resident.ResponseResidentDTO;
 import api.condominio.portaria.enums.RecordStatusEnum;
 import api.condominio.portaria.exceptions.RecordNotFoundException;
-import api.condominio.portaria.exceptions.RegisterOverflow;
+import api.condominio.portaria.exceptions.RegisterOverflowException;
 import api.condominio.portaria.models.Resident;
 import api.condominio.portaria.models.embeddable.ApartamentNumber;
 import api.condominio.portaria.repository.ApartamentRepository;
@@ -37,7 +37,7 @@ public class ResidentService {
     public ResponseResidentDTO createResident(CreateResidentDTO residentDTO) {
         var residentQtd = repository.countByApartamentNumAptoBlocoAndApartamentNumAptoNumAptoAndStatusEquals(residentDTO.bloco(), residentDTO.numApto(), RecordStatusEnum.ACTIVE);
         if (residentQtd == MAXRESIDENTS) {
-            throw new RegisterOverflow(MAXRESIDENTS, "Residents");
+            throw new RegisterOverflowException(MAXRESIDENTS, "Residents");
         }
 
         var apartament = apartamentRepository.findById(new ApartamentNumber(residentDTO.bloco(), residentDTO.numApto()))
