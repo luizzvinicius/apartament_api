@@ -42,7 +42,7 @@ public class ResidentController {
         return ResponseEntity.status(HttpStatus.OK).body(service.getResidentsByNumApto(apartamentNumberDTO));
     }
 
-    @PutMapping
+    @PutMapping("/update_phone")
     public ResponseEntity<ResponseResidentDTO> updatePhone(@RequestBody @Valid PhoneDTO phone) {
         return ResponseEntity.ok(service.updatePhone(phone));
     }

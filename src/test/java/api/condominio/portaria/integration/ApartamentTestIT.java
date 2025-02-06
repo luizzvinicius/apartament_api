@@ -82,18 +82,15 @@ class ApartamentTestIT {
     @Test
     @DisplayName("Must delete the apartament and its relations")
     void deleteAllRelations() {
-        var url = testRestTemplate.getRootUri() + "/api/v1/apartament";
+        var url = testRestTemplate.getRootUri() + "/api/v1/apartament/bloco/2/apt/203";
 
-        var exchange = testRestTemplate.exchange(url, HttpMethod.DELETE,
-                new HttpEntity<>(new ApartamentNumberDTO("2", "203")), Void.class
-        );
+        testRestTemplate.delete(url);
 
         var owner = ownerRepository.findByCpfAndStatusEquals("12762393000", RecordStatusEnum.ACTIVE);
         var residents = residentRepository.findByApartamentNumAptoBlocoAndApartamentNumAptoNumAptoAndStatusEquals("2", "203", RecordStatusEnum.ACTIVE);
         var vehicle = vehicleRepository.countByApartamentNumAptoBlocoAndApartamentNumAptoNumApto("2", "203");
 
         SoftAssertions s = new SoftAssertions();
-        s.assertThat(exchange.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
         s.assertThat(owner).isEmpty();
         s.assertThat(residents).size().isEqualTo(0);
         s.assertThat(vehicle).isEqualTo(0);

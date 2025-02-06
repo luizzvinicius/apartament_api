@@ -16,7 +16,7 @@ import java.util.UUID;
 
 @Validated
 @RestController
-@RequestMapping("/api/v1/owner")
+@RequestMapping("/api/v1")
 public class OwnerController {
     private final OwnerService service;
 
@@ -24,23 +24,23 @@ public class OwnerController {
         this.service = service;
     }
 
-    @PostMapping
+    @PostMapping("/owner")
     public ResponseEntity<ResponseOwnerDTO> createOwner(@RequestBody @Valid CreateOwnerDTO createOwnerDTO) {
         return ResponseEntity.status(HttpStatus.CREATED).body(service.createOwner(createOwnerDTO));
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("owner/{id}")
     public ResponseEntity<ResponseOwnerDTO> getOwner(@PathVariable UUID id) {
         return ResponseEntity.ok(service.getOwner(id));
     }
 
-    @GetMapping
+    @GetMapping("/owners")
     public ResponseEntity<OwnerPageDTO> getOwners(@RequestParam(defaultValue = "0") @PositiveOrZero int p,
                                                   @RequestParam(defaultValue = "16") @Positive @Max(48) int s) {
         return ResponseEntity.ok(service.getOwners(p, s));
     }
 
-    @PutMapping
+    @PutMapping("/owner/update_phone")
     public ResponseEntity<ResponseOwnerDTO> updateOwnersPhone(@RequestBody @Valid PhoneDTO phone) {
         var owner = service.updateOwnerPhone(phone);
         return ResponseEntity.ok(owner);

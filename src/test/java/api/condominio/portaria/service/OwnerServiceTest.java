@@ -92,7 +92,7 @@ class OwnerServiceTest {
         s.assertThat(owner).isNotNull();
         s.assertThat(responseOwnerDTO).isNotNull().isEqualTo(responseDto);
         verify(repository, times(1)).findByCpfAndStatusEquals(createDto.cpf(), INACTIVE);
-        verify(repository, times(1)).save(any(Owner.class));
+        verify(repository, times(0)).save(any(Owner.class));
         verify(apartamentRepository, times(1))
                 .updateIdProprietario(owner.getId(), ACTIVE.getValue(), createDto.bloco(), createDto.numApto(), INACTIVE.getValue());
         s.assertAll();

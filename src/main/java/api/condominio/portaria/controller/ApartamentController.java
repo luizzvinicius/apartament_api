@@ -5,6 +5,7 @@ import api.condominio.portaria.dtos.apartament.ApartamentNumberDTO;
 import api.condominio.portaria.dtos.apartament.ResponseApartamentDTO;
 import api.condominio.portaria.service.ApartamentService;
 import api.condominio.portaria.validations.apartament_number.BlocoValidation;
+import api.condominio.portaria.validations.apartament_number.NumAptoValidation;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Positive;
@@ -36,9 +37,10 @@ public class ApartamentController {
         return ResponseEntity.ok(service.findApartamentBloco(bloco, p, s));
     }
 
-    @DeleteMapping
-    public ResponseEntity<Void> deleteAllRelations(@RequestBody @Valid ApartamentNumberDTO apartamentNumberDTO) {
-        service.deleteApartament(apartamentNumberDTO);
+    @DeleteMapping("/bloco/{bnum}/apt/{aptnum}")
+    public ResponseEntity<Void> deleteAllRelations(@PathVariable @BlocoValidation String bnum,
+                                                   @PathVariable @NumAptoValidation String aptnum) {
+        service.deleteApartament(new ApartamentNumberDTO(bnum, aptnum));
         return ResponseEntity.noContent().build();
     }
 }
