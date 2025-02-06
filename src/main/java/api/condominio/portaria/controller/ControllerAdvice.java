@@ -96,7 +96,7 @@ public class ControllerAdvice {
 
     // Database
     @ExceptionHandler(DataIntegrityViolationException.class) // duplicate registers etc
-    public ResponseEntity<ApiErrorResponse> integrityViolation(DataIntegrityViolationException e) {
+    public ResponseEntity<ApiErrorResponse> integrityViolation() {
         return ResponseEntity.status(BAD_REQUEST).contentType(APPLICATION_JSON)
                 .body(new ApiErrorResponse("BAD_REQUEST", "database error"));
     }

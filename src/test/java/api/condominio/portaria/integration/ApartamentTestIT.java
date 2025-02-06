@@ -1,6 +1,5 @@
 package api.condominio.portaria.integration;
 
-import api.condominio.portaria.dtos.apartament.ApartamentNumberDTO;
 import api.condominio.portaria.dtos.owner.CreateOwnerDTO;
 import api.condominio.portaria.dtos.resident.CreateResidentDTO;
 import api.condominio.portaria.dtos.vehicle.CreateVehicleDTO;
@@ -23,9 +22,6 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringRunner;
 
