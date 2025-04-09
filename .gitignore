@@ -9,6 +9,7 @@ target/
 *.sql
 app.key
 app.pub
+.env
 
 ### STS ###
 .apt_generated
