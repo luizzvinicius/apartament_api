@@ -1,4 +1,4 @@
-package api.condominio.portaria.configuration.security;
+package api.condominio.portaria.auth.config;
 
 import org.keycloak.admin.client.Keycloak;
 import org.keycloak.admin.client.KeycloakBuilder;
@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class KeyCloakConfig {
+public class KeycloakConfig {
     @Value("${app.keycloak.admin.clientSecret}")
     private String secret;
 

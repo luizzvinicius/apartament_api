@@ -1,4 +1,4 @@
-package api.condominio.portaria.configuration.security;
+package api.condominio.portaria.auth.config;
 
 import api.condominio.portaria.enums.RoleEnum;
 import org.springframework.beans.factory.annotation.Value;
