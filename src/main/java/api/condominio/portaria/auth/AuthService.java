@@ -2,6 +2,7 @@ package api.condominio.portaria.auth;
 
 import api.condominio.portaria.dtos.user.CreateUserDto;
 import api.condominio.portaria.enums.RoleEnum;
+import api.condominio.portaria.exceptions.UserNotCreatedException;
 import jakarta.ws.rs.core.Response;
 import org.keycloak.admin.client.Keycloak;
 import org.keycloak.admin.client.resource.UsersResource;
@@ -51,7 +52,7 @@ public class AuthService {
             List<UserRepresentation> userFromKeycloak = getUsersResource().searchByEmail(user.email(), true);
             System.out.println(response.getStatus());
             if (response.getStatus() != 201 || userFromKeycloak.isEmpty()) {
-                throw new RuntimeException();
+                throw new UserNotCreatedException();
             }
             message = message + " com id= " + userFromKeycloak.getFirst().getId();
         } catch (Exception e) {
@@ -71,7 +72,7 @@ public class AuthService {
             List<UserRepresentation> userFromKeycloak = getUsersResource().searchByEmail(user.email(), true);
             System.out.println(response.getStatus());
             if (response.getStatus() != 201 || userFromKeycloak.isEmpty()) {
-                throw new RuntimeException();
+                throw new UserNotCreatedException();
             }
             message = message + " com id= " + userFromKeycloak.getFirst().getId();
         } catch (Exception e) {
