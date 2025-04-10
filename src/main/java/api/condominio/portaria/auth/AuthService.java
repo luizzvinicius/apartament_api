@@ -1,5 +1,7 @@
 package api.condominio.portaria.auth;
 
+import api.condominio.portaria.auth.dtos.ResponseLoginDto;
+import api.condominio.portaria.auth.feignclients.LoginClient;
 import api.condominio.portaria.dtos.user.CreateUserDto;
 import api.condominio.portaria.enums.RoleEnum;
 import api.condominio.portaria.exceptions.UserNotCreatedException;
@@ -8,20 +10,24 @@ import org.keycloak.admin.client.Keycloak;
 import org.keycloak.admin.client.resource.UsersResource;
 import org.keycloak.representations.idm.CredentialRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
-import org.keycloak.representations.idm.UserSessionRepresentation;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class AuthService {
-    private final Keycloak keycloak;
     @Value("${app.keycloak.realm}")
     private String realm;
 
-    public AuthService(Keycloak keycloak) {
+    private final Keycloak keycloak;
+    private final LoginClient loginClient;
+
+    public AuthService(Keycloak keycloak, LoginClient loginClient) {
         this.keycloak = keycloak;
+        this.loginClient = loginClient;
     }
 
     private UsersResource getUsersResource() {
@@ -83,10 +89,19 @@ public class AuthService {
         return List.of(returnStatus, message);
     }
 
+    public ResponseLoginDto loginUser(String email, String password) {
+        Map<String, String> formParams = new HashMap<>();
+        formParams.put("client_id", realm);
+        formParams.put("grant_type", "password");
+        formParams.put("username", email);
+        formParams.put("password", password);
+
+       return loginClient.loginUser(formParams);
+    }
+
     public void logoutUser(String id) {
         keycloak.realm(realm)
                 .users().get(id).getUserSessions().stream()
-                .map(UserSessionRepresentation::getId)
-                .forEach(s -> keycloak.realm(realm).deleteSession(s, false));
+                .forEach(session -> keycloak.realm(realm).deleteSession(session.getId(), false));
     }
 }

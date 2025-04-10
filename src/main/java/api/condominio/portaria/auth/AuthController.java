@@ -1,6 +1,10 @@
 package api.condominio.portaria.auth;
 
+import api.condominio.portaria.auth.dtos.LoginDto;
+import api.condominio.portaria.auth.dtos.ResponseLoginDto;
 import api.condominio.portaria.dtos.user.CreateUserDto;
+
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,6 +21,12 @@ public class AuthController {
     public ResponseEntity<String> createUser(@RequestBody CreateUserDto user) {
         var infos = authService.createPorteiro(user);
         return ResponseEntity.status(Integer.parseInt(infos.get(0))).body(infos.get(1));
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<ResponseLoginDto> loginUser(@RequestBody LoginDto loginDto) {
+        var infos = authService.loginUser(loginDto.email(), loginDto.password());
+        return ResponseEntity.status(HttpStatus.OK).body(infos);
     }
 
     @PostMapping("/logout/{id}")

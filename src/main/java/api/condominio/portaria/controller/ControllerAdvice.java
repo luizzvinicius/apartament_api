@@ -20,6 +20,8 @@ import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 
+import java.net.ConnectException;
+
 @RestControllerAdvice
 public class ControllerAdvice {
     // Custom
@@ -99,5 +101,12 @@ public class ControllerAdvice {
     public ResponseEntity<ApiErrorResponse> integrityViolation() {
         return ResponseEntity.status(BAD_REQUEST).contentType(APPLICATION_JSON)
                 .body(new ApiErrorResponse("BAD_REQUEST", "database error"));
+    }
+    
+    // feign
+    @ExceptionHandler(java.net.ConnectException.class)
+    public ResponseEntity<ApiErrorResponse> handleConnectException(ConnectException e) {
+        return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).contentType(APPLICATION_JSON)
+                .body(new ApiErrorResponse("SERVICE_UNAVAILABLE", "Não foi possível estabelecer conexão"));
     }
 }

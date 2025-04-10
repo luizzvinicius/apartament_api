@@ -15,6 +15,14 @@ spring:
     open-in-view: true
     hibernate:
       ddl-auto: update
+  cloud:
+    openfeign:
+      client:
+        config:
+          default:
+            connectTimeout: 5000
+            readTimeout: 5000
+            loggerLevel: full
 #    properties:
 #      jakarta:
 #        persistence:
@@ -27,22 +35,9 @@ spring:
       add-mappings: false
   security:
     oauth2:
-#      client:
-#        registration:
-#          keycloack:
-#            clientId: ${spring.application.name}
-#            clientSecret: ${keycloak_secret}
-#            scope:
-#              - openid
-#              - profile
-#              - email
-#        provider:
-#          keycloack:
-#            issuerUri: http://localhost:8080/realms/API_apartament
       resourceserver:
         jwt:
           issuer-uri: ${app.keycloak.serverUrl}/realms/${app.keycloak.realm}
-#          jwk-set-uri: ${spring.security.oauth2.resourceserver.jwt.issuer-uri}/protocol/openid-connect/certs
 app:
   keycloak:
     admin:
