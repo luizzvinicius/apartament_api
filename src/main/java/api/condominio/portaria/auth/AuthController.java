@@ -2,7 +2,8 @@ package api.condominio.portaria.auth;
 
 import api.condominio.portaria.auth.dtos.LoginDto;
 import api.condominio.portaria.auth.dtos.ResponseLoginDto;
-import api.condominio.portaria.dtos.user.CreateUserDto;
+import api.condominio.portaria.auth.dtos.CreateUserRequestDto;
+import api.condominio.portaria.auth.dtos.CreateUserResponseDto;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/auth")
+@CrossOrigin(origins = "http://localhost:3000", maxAge = 3600)
 public class AuthController {
     private final AuthService authService;
 
@@ -18,9 +20,9 @@ public class AuthController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<String> createUser(@RequestBody CreateUserDto user) {
-        var infos = authService.createPorteiro(user);
-        return ResponseEntity.status(Integer.parseInt(infos.get(0))).body(infos.get(1));
+    public ResponseEntity<String> createUser(@RequestBody CreateUserRequestDto user) {
+        CreateUserResponseDto infos = authService.createPorteiro(user);
+        return ResponseEntity.status(HttpStatus.valueOf(infos.status())).body(infos.message());
     }
 
     @PostMapping("/login")

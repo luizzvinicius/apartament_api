@@ -2,7 +2,8 @@ package api.condominio.portaria.auth;
 
 import api.condominio.portaria.auth.dtos.ResponseLoginDto;
 import api.condominio.portaria.auth.feignclients.LoginClient;
-import api.condominio.portaria.dtos.user.CreateUserDto;
+import api.condominio.portaria.auth.dtos.CreateUserRequestDto;
+import api.condominio.portaria.auth.dtos.CreateUserResponseDto;
 import api.condominio.portaria.enums.RoleEnum;
 import api.condominio.portaria.exceptions.UserNotCreatedException;
 import jakarta.ws.rs.core.Response;
@@ -34,7 +35,7 @@ public class AuthService {
         return keycloak.realm(realm).users();
     }
 
-    private UserRepresentation getUserRepresentation(CreateUserDto user, RoleEnum role) {
+    private UserRepresentation getUserRepresentation(CreateUserRequestDto user, RoleEnum role) {
         UserRepresentation userRepresentation = new UserRepresentation();
         userRepresentation.setEnabled(true);
         userRepresentation.setUsername(user.name());
@@ -49,7 +50,7 @@ public class AuthService {
         return userRepresentation;
     }
 
-    public List<String> createPorteiro(CreateUserDto user) {
+    public CreateUserResponseDto createPorteiro(CreateUserRequestDto user) {
         UserRepresentation userRepresentation = getUserRepresentation(user, RoleEnum.PORTEIRO);
 
         String returnStatus = "201";
@@ -60,16 +61,16 @@ public class AuthService {
             if (response.getStatus() != 201 || userFromKeycloak.isEmpty()) {
                 throw new UserNotCreatedException();
             }
-            message = message + " com id= " + userFromKeycloak.getFirst().getId();
+            message = message + " with id= " + userFromKeycloak.getFirst().getId();
         } catch (Exception e) {
             returnStatus = "500";
-            message = "Usuário não criado";
+            message = "User Not Created";
         }
 
-        return List.of(returnStatus, message);
+        return new CreateUserResponseDto(returnStatus, message);
     }
 
-    public List<String> createSindico(CreateUserDto user) {
+    public List<String> createSindico(CreateUserRequestDto user) {
         UserRepresentation userRepresentation = getUserRepresentation(user, RoleEnum.SINDICO);
 
         String returnStatus = "201";
@@ -101,7 +102,7 @@ public class AuthService {
 
     public void logoutUser(String id) {
         keycloak.realm(realm)
-                .users().get(id).getUserSessions().stream()
+                .users().get(id).getUserSessions()
                 .forEach(session -> keycloak.realm(realm).deleteSession(session.getId(), false));
     }
 }
